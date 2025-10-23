@@ -1,9 +1,23 @@
 [
   {
+    "id": "1761245727845esfa520ju",
+    "title": "Вузы и программы",
+    "content": "Волгоград",
+    "createdAt": "2025-10-23T18:55:27.845Z",
+    "updatedAt": "2025-10-23T18:55:27.845Z"
+  },
+  {
+    "id": "1761245680036zvf4yk2dt",
+    "title": "Ресурсы для ML",
+    "content": "Глубокое обучение\n\nАвторы: Иэн Гудфеллоу, Иошуа Бенджио, Аарон Курвилль (Ian Goodfellow, Yoshua Bengio, Aaron Courville)\n\nГлубокое обучение на Python \n\nАвтор: Франсуа Шолле (François Chollet)\n\n\"Математика для машинного обучения\" — Марк Питер Дайзенрот, Эйн Ай. Англ, Ченг Сунг\n\n\"Искусственный интеллект. Современный подход\" — Стюарт Рассел, Питер Норвиг\n\n\"Python и машинное обучение\" — Себастьян Рашка, Вахид Мираджилели\n\n\"Введение в машинное обучение с Python\" — Андреас Мюллер, Сара Гвидо\n\n\"Грокаем глубокое обучение\" — Andrew Trask\n\n\"Deep Learning\" — Ian Goodfellow, Yoshua Bengio, Aaron Courville\n\n\"Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow\" — Aurélien Géron\n\n\"Deep Learning with PyTorch\" — Eli Stevens, Luca Antiga, Thomas Viehmann\n\n\"Transformers for Natural Language Processing\" — Denis Rothman\n\n\"Deep Learning for Coders with fastai and PyTorch\" — Jeremy Howard, Sylvain Gugger\n\n\"Generative Deep Learning\" — David Foster\n\nАлександр Дьяконов (YouTube)\n\nStepik / Yandex / ШАД / Deep Learning School",
+    "createdAt": "2025-10-23T18:54:40.036Z",
+    "updatedAt": "2025-10-23T18:54:40.038Z"
+  },
+  {
     "id": "1761153330177xoia16dae",
     "title": "Тайтлы",
-    "content": "Список зомби",
+    "content": "усопшие\n\nшкола тюрьма\n\nубийца акамэ\n\nчеловек бензопила\n\nпсихо пасс\n\nвавилон\n\nмаг воды\n\nплачущий призрак на пенсии\n\nгачиакута\n\nадский рай\n\nшарлотта\n\nчерный клевер\n\nза гранью\n\nтемный демон\n\nblood c\n\nатака титанов\n\nре зеро\n\n20thcenturyboys\n\nвсе что тебя касается\n\nфарфоровая кукла\n\nбуря потерь\n\nбтуум\n\nкоролевская игра\n\nэльфийская песнь\n\nпиковое аниме\n\n91 день\n\nкороль - шаман\n\nгунгрейв\n\nубийца гоблинов\n\nван пис\n\nпринц черной луны\n\nдни сакомото\n\nмагическая битва\n\nникогда не любил этот моб психо\n\nклеватесс\n\nцифровой цирк\n\nполе брани\n\nБлич\n\nпочитать игру друзей\n\nЮношеская бездна\n\nбесскласовый герой\n\nбыть героем x\n\nМагия вернувшего должна быть особенной\n\nрезонанс ужаса\n\n5 сантиметров в секунду\n\nаркнайт\n\nапгрейд",
     "createdAt": "2025-10-22T17:15:30.177Z",
-    "updatedAt": "2025-10-23T17:49:23.387Z"
+    "updatedAt": "2025-10-23T19:00:58.366Z"
   }
 ]

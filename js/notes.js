@@ -527,9 +527,9 @@ class NotesManager {
     }
 }
 
-// Стили для темной темы заметок
+// Обновленные стили для темной темы с черными оттенками
 const notesStyles = `
-/* Основные стили заметок в темной теме */
+/* Основные стили заметок в черной теме */
 .notes-container {
     width: 90%;
     margin-bottom: 10px;
@@ -549,10 +549,10 @@ const notesStyles = `
 .search-box-note input {
     flex: 1;
     padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #334155;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #333;
     border-radius: 8px;
-    color: #e2e8f0;
+    color: #fff;
     font-size: 14px;
     white-space: nowrap;
     transition: all 0.3s ease;
@@ -560,18 +560,18 @@ const notesStyles = `
 }
 
 .search-box-note input::placeholder {
-    color: #64748b;
+    color: #888;
 }
 
 .search-box-note input:focus {
-    border-color: #667eea;
-    background: rgba(255, 255, 255, 0.08);
+    border-color: #555;
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .add-note-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #222 0%, #000 100%);
     color: white;
-    border: none;
+    border: 1px solid #333;
     padding: 12px 24px;
     border-radius: 8px;
     cursor: pointer;
@@ -585,7 +585,8 @@ const notesStyles = `
 
 .add-note-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+    border-color: #555;
 }
 
 .note-grid {
@@ -596,8 +597,8 @@ const notesStyles = `
 }
 
 .note-card {
-    background: rgba(30, 41, 59, 0.7);
-    border: 1px solid #334155;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #222;
     border-radius: 12px;
     padding: 20px;
     transition: all 0.3s ease;
@@ -609,10 +610,10 @@ const notesStyles = `
 }
 
 .note-card:hover {
-    background: rgba(30, 41, 59, 0.9);
-    border-color: #475569;
+    background: rgba(0, 0, 0, 0.6);
+    border-color: #333;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 .note-header {
@@ -621,14 +622,14 @@ const notesStyles = `
     align-items: flex-start;
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #222;
 }
 
 .note-title {
     margin: 0;
     font-size: 1.3em;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #fff;
     flex: 1;
     margin-right: 15px;
     word-break: break-word;
@@ -637,16 +638,16 @@ const notesStyles = `
 
 .note-date {
     font-size: 0.8em;
-    color: #94a3b8;
+    color: #888;
     white-space: nowrap;
     flex-shrink: 0;
-    background: rgba(148, 163, 184, 0.1);
+    background: rgba(136, 136, 136, 0.1);
     padding: 4px 8px;
     border-radius: 6px;
 }
 
 .note-content {
-    color: #cbd5e1;
+    color: #ccc;
     line-height: 1.6;
     margin-bottom: 15px;
     max-height: 100px;
@@ -664,7 +665,7 @@ const notesStyles = `
     left: 0;
     right: 0;
     height: 30px;
-    background: linear-gradient(transparent, rgba(30, 41, 59, 0.9));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
 }
 
 .note-actions {
@@ -675,14 +676,14 @@ const notesStyles = `
 }
 
 .btn-edit, .btn-delete {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid #374151;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #222;
     border-radius: 8px;
     padding: 8px 12px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.85em;
-    color: #d1d5db;
+    color: #ccc;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -690,15 +691,15 @@ const notesStyles = `
 }
 
 .btn-edit:hover {
-    background: #3b82f6;
-    border-color: #3b82f6;
+    background: #333;
+    border-color: #444;
     color: white;
     transform: translateY(-1px);
 }
 
 .btn-delete:hover {
-    background: #ef4444;
-    border-color: #ef4444;
+    background: #300;
+    border-color: #500;
     color: white;
     transform: translateY(-1px);
 }
@@ -711,14 +712,14 @@ const notesStyles = `
     font-weight: 500;
 }
 
-/* Модальные окна */
+/* Модальные окна - черная тема */
 .notes-modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -727,37 +728,40 @@ const notesStyles = `
 }
 
 .notes-modal {
-    background: #1e293b;
-    border-radius: 16px;
+    background: #000;
+    border-radius: 12px;
     padding: 0;
-    width: 600px;
-    max-width: 90vw;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    width: 700px;
+    max-width: 85vw;
+    max-height: 85vh;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
     z-index: 10001;
     overflow: hidden;
-    border: 1px solid #334155;
+    border: 2px solid #222;
+    display: flex;
+    flex-direction: column;
 }
 
 .notes-modal-header {
     padding: 20px 25px;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #222;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(20, 20, 20, 0.8);
 }
 
 .notes-modal-title {
     margin: 0;
-    color: #f1f5f9;
+    color: #fff;
     font-size: 1.3em;
     font-weight: 600;
 }
 
 .notes-modal-close {
-    background: rgba(239, 68, 68, 0.1);
-    border: none;
-    color: #ef4444;
+    background: rgba(80, 0, 0, 0.3);
+    border: 1px solid #300;
+    color: #f55;
     font-size: 20px;
     cursor: pointer;
     padding: 0;
@@ -772,18 +776,22 @@ const notesStyles = `
 }
 
 .notes-modal-close:hover {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(100, 0, 0, 0.5);
+    border-color: #500;
 }
 
 .notes-modal-body {
     padding: 25px;
     background: transparent;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .notes-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
 }
 
 .notes-form-group {
@@ -793,17 +801,17 @@ const notesStyles = `
 
 .notes-form-label {
     margin-bottom: 8px;
-    color: #e2e8f0;
+    color: #ddd;
     font-weight: 500;
     font-size: 14px;
 }
 
 .notes-form-input, .notes-form-textarea {
     padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #374151;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #222;
     border-radius: 8px;
-    color: #f1f5f9;
+    color: #fff;
     font-size: 14px;
     box-sizing: border-box;
     width: 100%;
@@ -814,17 +822,18 @@ const notesStyles = `
 }
 
 .notes-form-input:focus, .notes-form-textarea:focus {
-    border-color: #667eea;
-    background: rgba(255, 255, 255, 0.08);
+    border-color: #444;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .notes-form-input::placeholder, .notes-form-textarea::placeholder {
-    color: #64748b;
+    color: #666;
 }
 
 .notes-form-textarea {
-    min-height: 120px;
+    min-height: 200px;
     line-height: 1.5;
+    flex: 1;
 }
 
 .notes-form-actions {
@@ -833,14 +842,14 @@ const notesStyles = `
     justify-content: flex-end;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #334155;
+    border-top: 1px solid #222;
 }
 
 .notes-btn-cancel {
     padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #d1d5db;
-    border: 1px solid #374151;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ccc;
+    border: 1px solid #222;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
@@ -850,14 +859,15 @@ const notesStyles = `
 }
 
 .notes-btn-cancel:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #333;
 }
 
 .notes-btn-save {
     padding: 10px 20px;
-    background: #667eea;
+    background: #222;
     color: white;
-    border: none;
+    border: 1px solid #333;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
@@ -867,18 +877,19 @@ const notesStyles = `
 }
 
 .notes-btn-save:hover {
-    background: #5a67d8;
+    background: #333;
+    border-color: #444;
     transform: translateY(-1px);
 }
 
-/* Окно просмотра заметки */
+/* Окно просмотра заметки - черная тема */
 .note-view-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -889,32 +900,33 @@ const notesStyles = `
 }
 
 .note-view-modal {
-    background: #1e293b;
-    border-radius: 16px;
+    background: #000;
+    border-radius: 12px;
     padding: 0;
-    width: 90vw;
-    height: 90vh;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    width: 95vw;
+    height: 95vh;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
     z-index: 10001;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid #334155;
+    border: 2px solid #222;
 }
 
 .note-view-header {
     padding: 25px 30px;
-    border-bottom: 1px solid #334155;
-    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid #222;
+    background: rgba(20, 20, 20, 0.8);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 80px;
 }
 
 .note-view-title {
     margin: 0;
-    color: #f1f5f9;
-    font-size: 1.8em;
+    color: #fff;
+    font-size: 2em;
     font-weight: 600;
     flex: 1;
     padding-right: 20px;
@@ -923,9 +935,9 @@ const notesStyles = `
 }
 
 .note-view-close {
-    background: rgba(239, 68, 68, 0.1);
-    border: none;
-    color: #ef4444;
+    background: rgba(80, 0, 0, 0.3);
+    border: 1px solid #300;
+    color: #f55;
     font-size: 24px;
     cursor: pointer;
     padding: 0;
@@ -941,30 +953,33 @@ const notesStyles = `
 }
 
 .note-view-close:hover {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(100, 0, 0, 0.5);
+    border-color: #500;
 }
 
 .note-view-content {
     flex: 1;
     padding: 30px;
     background: transparent;
-    color: #e2e8f0;
+    color: #ddd;
     font-size: 16px;
     line-height: 1.7;
     overflow-y: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
+    background: rgba(10, 10, 10, 0.5);
 }
 
 .note-view-footer {
     padding: 20px 30px;
-    border-top: 1px solid #334155;
-    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid #222;
+    background: rgba(20, 20, 20, 0.8);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #94a3b8;
+    color: #888;
     font-size: 13px;
+    min-height: 70px;
 }
 
 .note-view-dates {
@@ -982,9 +997,9 @@ const notesStyles = `
 
 .note-btn-edit {
     padding: 8px 16px;
-    background: #3b82f6;
+    background: #222;
     color: white;
-    border: none;
+    border: 1px solid #333;
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
@@ -994,15 +1009,16 @@ const notesStyles = `
 }
 
 .note-btn-edit:hover {
-    background: #2563eb;
+    background: #333;
+    border-color: #444;
     transform: translateY(-1px);
 }
 
 .note-btn-delete {
     padding: 8px 16px;
-    background: #ef4444;
+    background: #300;
     color: white;
-    border: none;
+    border: 1px solid #500;
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
@@ -1012,15 +1028,16 @@ const notesStyles = `
 }
 
 .note-btn-delete:hover {
-    background: #dc2626;
+    background: #500;
+    border-color: #700;
     transform: translateY(-1px);
 }
 
 .note-btn-save {
     padding: 8px 16px;
-    background: #10b981;
+    background: #030;
     color: white;
-    border: none;
+    border: 1px solid #050;
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
@@ -1030,15 +1047,16 @@ const notesStyles = `
 }
 
 .note-btn-save:hover {
-    background: #059669;
+    background: #050;
+    border-color: #070;
     transform: translateY(-1px);
 }
 
 .note-btn-cancel {
     padding: 8px 16px;
-    background: #6b7280;
+    background: #222;
     color: white;
-    border: none;
+    border: 1px solid #333;
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
@@ -1048,38 +1066,50 @@ const notesStyles = `
 }
 
 .note-btn-cancel:hover {
-    background: #4b5563;
+    background: #333;
+    border-color: #444;
     transform: translateY(-1px);
 }
 
 /* Поля ввода для редактирования */
 .note-edit-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #667eea;
-    border-radius: 8px;
-    color: #f1f5f9;
-    font-size: 1.8em;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 0px;
+    color: #fff;
+    font-size: 2em;
     font-weight: 600;
-    padding: 12px 16px;
+    padding: 15px 20px;
     width: 100%;
     font-family: inherit;
     outline: none;
+    transition: all 0.3s ease;
+}
+
+.note-edit-input:focus {
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .note-edit-textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #667eea;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
     border-radius: 8px;
-    color: #e2e8f0;
+    color: #ddd;
     font-size: 16px;
     line-height: 1.7;
-    padding: 20px;
+    padding: 25px;
     width: calc(100% - 60px);
     margin: 20px 30px;
-    min-height: 300px;
+    min-height: 400px;
     resize: vertical;
     font-family: inherit;
     outline: none;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.note-edit-textarea:focus {
+    background: rgba(0, 0, 0, 0.6);
 }
 
 /* Состояние пустого списка заметок */
@@ -1087,10 +1117,10 @@ const notesStyles = `
     grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
-    color: #94a3b8;
-    background: rgba(255, 255, 255, 0.03);
+    color: #888;
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
-    border: 1px dashed #334155;
+    border: 2px dashed #222;
 }
 
 .notes-empty-icon {
@@ -1101,7 +1131,7 @@ const notesStyles = `
 
 .notes-empty-state h3 {
     margin-bottom: 10px;
-    color: #e2e8f0;
+    color: #ddd;
     font-size: 1.5em;
     font-weight: 600;
 }
@@ -1184,6 +1214,7 @@ const notesStyles = `
     .notes-modal {
         width: 95vw;
         margin: 10px;
+        max-height: 90vh;
     }
     
     .note-view-title {
@@ -1197,10 +1228,17 @@ const notesStyles = `
     .note-edit-textarea {
         width: calc(100% - 40px);
         margin: 15px 20px;
+        min-height: 300px;
+    }
+    
+    .note-edit-input {
+        font-size: 1.4em;
+        padding: 12px 15px;
     }
     
     .note-view-header {
         padding: 20px;
+        min-height: 60px;
     }
     
     .note-view-content {
@@ -1212,6 +1250,7 @@ const notesStyles = `
         flex-direction: column;
         gap: 15px;
         align-items: stretch;
+        min-height: auto;
     }
     
     .note-view-actions {
