@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+<style>
+    .icon-bg { fill: #404040; transition: fill 0.3s ease; }
+    .icon-line { stroke: #1C252C; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.3s ease; }
+    svg:hover .icon-bg { fill: #4A4A4A; }
+    svg:hover .icon-line { stroke: #4A90E2; }
+</style>
+<rect class="icon-bg" width="24" height="24" rx="6" ry="6"/>
+<path class="icon-line" d="M3 10L12 3l9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>
+</svg>

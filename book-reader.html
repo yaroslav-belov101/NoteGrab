@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteGrab — Читалка</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="reader-container">
+    <!-- Шапка читалки -->
+    <div class="reader-header">
+      <div class="reader-book-info">
+        <h1 id="reader-book-title">Загрузка...</h1>
+        <p class="author" id="reader-book-author"></p>
+      </div>
+      
+      <div class="reader-controls">
+        <div class="reader-settings">
+          <button class="reader-control-btn" id="settings-btn">⚙️ Настройки</button>
+          <div class="settings-panel" id="settings-panel">
+            <div class="setting-group">
+              <label for="font-size">Размер шрифта</label>
+              <select id="font-size">
+                <option value="14">Маленький</option>
+                <option value="16" selected>Средний</option>
+                <option value="18">Большой</option>
+                <option value="20">Очень большой</option>
+              </select>
+            </div>
+            <div class="setting-group">
+              <label for="theme">Тема</label>
+              <select id="theme">
+                <option value="dark" selected>Тёмная</option>
+                <option value="light">Светлая</option>
+                <option value="sepia">Сепия</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button class="reader-control-btn" onclick="closeReader()">✕ Закрыть</button>
+      </div>
+    </div>
+
+    <!-- Прогресс чтения -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="reader-content">
+      <!-- Для текстовых форматов -->
+      <div class="text-content" id="text-content">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Загрузка книги...</p>
+        </div>
+      </div>
+
+      <!-- Для PDF -->
+      <div class="pdf-container" id="pdf-container">
+        <iframe class="pdf-viewer" id="pdf-viewer"></iframe>
+      </div>
+    </div>
+
+    <!-- Навигация -->
+    <div class="navigation-controls">
+      <button class="nav-btn" id="prev-btn" onclick="previousPage()">← Назад</button>
+      
+      <div class="page-info">
+        <span id="page-info">Страница: - / -</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      
+      <button class="nav-btn" id="next-btn" onclick="nextPage()">Вперёд →</button>
+    </div>
+  </div>
+
+  <script src="js/book-reader.js"></script>
+</body>
+</html>

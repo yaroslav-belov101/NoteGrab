@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteGrab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="sidebar sidebar-pinned">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="images/logo.png" alt="Лого">
+            </div>
+            <div class="system-title">NoteGrab</div>
+            <div class="sidebar-pin">
+                <button id="pinToggle" class="pin-button">📌</button>
+            </div>
+        </div>
+        <nav>
+            <ul class="sidebar-menu">
+                <li class="pin-item">
+                    <div class="sidebar-pin">
+                        <button id="pinToggle" class="pin-button">📌</button>
+                    </div>
+                </li>
+                <li class="menu-divider-container">
+                    <hr class="menu-divider">
+                </li>
+                <li><a href="main_menu.html">
+                    <img src="images/home.svg" alt="Главная" class="menu-icon">
+                    <span>Главное меню</span>
+                </a></li>
+                <li><a href="notes.html">
+                    <img src="images/notes.svg" alt="Заметки" class="menu-icon">
+                    <span>Заметки</span>
+                </a></li>
+                <li><a href="planner.html">
+                    <img src="images/planner.svg" alt="Планнер" class="menu-icon">
+                    <span>Планнер</span>
+                </a></li>
+                <li><a href="calculator.html" class="active">
+                    <img src="images/calculator.svg" alt="Калькулятор" class="menu-icon">
+                    <span>Калькулятор</span>
+                </a></li>                
+                <li><a href="library.html">
+                    <img src="images/library.svg" alt="Библиотека" class="menu-icon">
+                    <span>Библиотека</span>
+                </a></li>
+                <li><a href="pers_prog.html">
+                    <img src="images/pers_prog.svg" alt="Индивидуальная программа обучения" class="menu-icon">
+                    <span>Индивидуальная программа</span>
+                </a></li>
+                <li><a href="study_mat.html">
+                    <img src="images/study.svg" alt="Учеба" class="menu-icon">
+                    <span>Учебные материалы</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <img src="images/settings.svg" alt="Настройки" class="menu-icon">
+                    <span>Настройки</span>
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main class="main-content main-content-pinned">
+        <div class="welcome-section">
+            <h1>Калькулятор</h1>
+            <p class="subtitle">Производите вычисления быстро и удобно.</p>
+        </div>
+        
+        <div class="calculator-container">
+            <!-- Основной калькулятор -->
+            <div class="calculator">
+                <div class="calculator-header">
+                    <button class="scientific-toggle" id="scientificToggle" onclick="toggleScientific()">
+                        <span>🔬 Научный</span>
+                    </button>
+                </div>
+                
+                <div class="calculator-display">
+                    <input type="text" id="result">
+                </div>
+                
+                <div class="buttons">
+                    <!-- Первый ряд -->
+                    <div class="button-row">
+                        <button class="calc-btn calc-clear" onclick="clearDisplay()">C</button>
+                        <button class="calc-btn calc-clear" onclick="deleteLast()">⌫</button>
+                        <button class="calc-btn calc-operator" onclick="appendToDisplay('%')">%</button>
+                        <button class="calc-btn calc-operator" onclick="appendToDisplay('/')">/</button>
+                    </div>
+                    
+                    <!-- Второй ряд -->
+                    <div class="button-row">
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('7')">7</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('8')">8</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('9')">9</button>
+                        <button class="calc-btn calc-operator" onclick="appendToDisplay('*')">×</button>
+                    </div>
+                    
+                    <!-- Третий ряд -->
+                    <div class="button-row">
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('4')">4</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('5')">5</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('6')">6</button>
+                        <button class="calc-btn calc-operator" onclick="appendToDisplay('-')">-</button>
+                    </div>
+                    
+                    <!-- Четвертый ряд -->
+                    <div class="button-row">
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('1')">1</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('2')">2</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('3')">3</button>
+                        <button class="calc-btn calc-operator" onclick="appendToDisplay('+')">+</button>
+                    </div>
+                    
+                    <!-- Пятый ряд -->
+                    <div class="button-row">
+                        <button class="calc-btn calc-plus-minus" onclick="togglePlusMinus()">±</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('0')">0</button>
+                        <button class="calc-btn calc-number" onclick="appendToDisplay('.')">.</button>
+                        <button class="calc-btn calc-equals" onclick="calculate()">=</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Научная панель справа -->
+            <div class="scientific-sidebar collapsed" id="scientificSidebar">
+                <div class="scientific-header">
+                    <div class="scientific-title">
+                        <span>🔬</span>
+                        <span>Научные функции</span>
+                    </div>
+                    <button class="close-scientific" onclick="toggleScientific()">✕</button>
+                </div>
+                <div class="scientific-buttons">
+                    <button class="calc-btn calc-scientific" onclick="calculateSquareRoot()">√</button>
+                    <button class="calc-btn calc-scientific" onclick="calculatePower(2)">x²</button>
+                    <button class="calc-btn calc-scientific" onclick="calculatePower(3)">x³</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateSin()">sin</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateCos()">cos</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateTan()">tan</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateLog()">log</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateLn()">ln</button>
+                    <button class="calc-btn calc-scientific" onclick="calculateFactorial()">x!</button>
+                    <button class="calc-btn calc-scientific" onclick="openParenthesis()">(</button>
+                    <button class="calc-btn calc-scientific" onclick="closeParenthesis()">)</button>
+                    <button class="calc-btn calc-scientific" onclick="appendToDisplay('π')">π</button>
+                    <button class="calc-btn calc-scientific" onclick="appendToDisplay('e')">e</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/calculator.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

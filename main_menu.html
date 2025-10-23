@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteGrab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="sidebar sidebar-pinned">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="images/logo.png" alt="Лого">
+            </div>
+            <div class="system-title">NoteGrab</div>
+            <div class="sidebar-pin">
+                <button id="pinToggle" class="pin-button">📌</button>
+            </div>
+        </div>
+        <nav>
+            <ul class="sidebar-menu">
+                <li class="pin-item">
+                    <div class="sidebar-pin">
+                        <button id="pinToggle" class="pin-button">📌</button>
+                    </div>
+                </li>
+                <li class="menu-divider-container">
+                    <hr class="menu-divider">
+                </li>
+                <li><a href="main_menu.html" class="active">
+                    <img src="images/home.svg" alt="Главная" class="menu-icon">
+                    <span>Главное меню</span>
+                </a></li>
+                <li><a href="notes.html">
+                    <img src="images/notes.svg" alt="Заметки" class="menu-icon">
+                    <span>Заметки</span>
+                </a></li>
+                <li><a href="planner.html">
+                    <img src="images/planner.svg" alt="Планировщик" class="menu-icon">
+                    <span>Планнер</span>
+                </a></li>
+                <li><a href="calculator.html">
+                    <img src="images/calculator.svg" alt="Калькулятор" class="menu-icon">
+                    <span>Калькулятор</span>
+                </a></li>  
+                <li><a href="library.html">
+                    <img src="images/library.svg" alt="Библиотека" class="menu-icon">
+                    <span>Библиотека</span>
+                </a></li>
+                <li><a href="pers_prog.html">
+                    <img src="images/pers_prog.svg" alt="Индивидуальная программа обучения" class="menu-icon">
+                    <span>Индивидуальная программа</span>
+                </a></li>
+                <li><a href="study_mat.html">
+                    <img src="images/study.svg" alt="Учеба" class="menu-icon">
+                    <span>Учебные материалы</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <img src="images/settings.svg" alt="Настройки" class="menu-icon">
+                    <span>Настройки</span>
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main class="main-content main-content-pinned">
+        <div class="welcome-section">
+            <h1>Добро пожаловать в NoteGrab! 📚</h1>
+            <p class="subtitle">Твой персональный помощник для учёбы и организации знаний</p>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-card" onclick="location.href='notes.html'">
+                <div class="action-icon">📝</div>
+                <h3>Быстрая заметка</h3>
+                <p>Запиши мысль пока не забыл</p>
+            </div>
+            
+            <div class="action-card" onclick="location.href='library.html'">
+                <div class="action-icon">📥</div>
+                <h3>Скачать материал</h3>
+                <p>Сохрани статью или видео</p>
+            </div>
+            
+            <div class="action-card" onclick="location.href='study_mat.html'">
+                <div class="action-icon">📚</div>
+                <h3>Мои материалы</h3>
+                <p>Продолжи обучение</p>
+            </div>
+            
+            <div class="action-card" onclick="location.href='planner.html'">
+                <div class="action-icon">🗓️</div>
+                <h3>План на день</h3>
+                <p>Что нужно сделать сегодня</p>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h2>Недавняя активность</h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-icon">📝</span>
+                    <span>Заметка "Идеи для проекта"</span>
+                    <span class="activity-time">2 часа назад</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">📥</span>
+                    <span>Скачан PDF по программированию</span>
+                    <span class="activity-time">Вчера</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Заметок</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Материалов</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Задачи сегодня</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/database.js"></script>
+    <script src="js/library.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

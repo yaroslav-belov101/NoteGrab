@@ -1,0 +1,18 @@
+{
+  "name": "notegrab",
+  "version": "1.0.0",
+  "description": "Desktop book reader application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging"
+  },
+  "devDependencies": {
+    "electron": "^22.0.0"
+  },
+  "dependencies": {
+    "@lingo-reader/epub-parser": "^0.4.2",
+    "epub": "^1.3.0",
+    "pdf-parse": "^2.4.5"
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteGrab — Просмотр книги</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="sidebar sidebar-pinned">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="images/logo.png" alt="Лого">
+      </div>
+      <div class="system-title">NoteGrab</div>
+      <div class="sidebar-pin">
+        <button id="pinToggle" class="pin-button">📌</button>
+      </div>
+    </div>
+    <nav>
+      <ul class="sidebar-menu">
+        <li><a href="main_menu.html">
+          <img src="images/home.svg" alt="Главная" class="menu-icon">
+          <span>Главное меню</span>
+        </a></li>
+        <li><a href="notes.html">
+          <img src="images/notes.svg" alt="Заметки" class="menu-icon">
+          <span>Заметки</span>
+        </a></li>
+        <li><a href="planner.html">
+          <img src="images/planner.svg" alt="Планировщик" class="menu-icon">
+          <span>Планировщик</span>
+        </a></li>
+        <li><a href="calculator.html">
+            <img src="images/calculator.svg" alt="Калькулятор" class="menu-icon">
+            <span>Калькулятор</span>
+        </a></li>  
+        <li><a href="library.html">
+          <img src="images/library.svg" alt="Библиотека" class="menu-icon">
+          <span>Библиотека</span>
+        </a></li>
+        <li><a href="pers_prog.html">
+          <img src="images/pers_prog.svg" alt="Индивидуальная программа обучения" class="menu-icon">
+          <span>Индивидуальная программа</span>
+        </a></li>
+        <li><a href="study_mat.html">
+          <img src="images/study.svg" alt="Учеба" class="menu-icon">
+          <span>Учебные материалы</span>
+        </a></li>
+        <li><a href="settings.html">
+          <img src="images/settings.svg" alt="Настройки" class="menu-icon">
+          <span>Настройки</span>
+        </a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main class="main-content main-content-pinned">
+    <div class="book-view-container">
+      <button class="back-button" onclick="goBackToLibrary()">
+        ← Назад к библиотеке
+      </button>
+      
+      <div id="book-details" class="book-details">
+        <!-- Данные книги будут загружены через JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <script src="js/book-view.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

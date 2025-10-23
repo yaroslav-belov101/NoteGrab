@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteGrab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="sidebar sidebar-pinned">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="images/logo.png" alt="Лого">
+            </div>
+            <div class="system-title">NoteGrab</div>
+            <div class="sidebar-pin">
+                <button id="pinToggle" class="pin-button">📌</button>
+            </div>
+        </div>
+        <nav>
+            <ul class="sidebar-menu">
+                <li class="pin-item">
+                    <div class="sidebar-pin">
+                        <button id="pinToggle" class="pin-button">📌</button>
+                    </div>
+                </li>
+                <li class="menu-divider-container">
+                    <hr class="menu-divider">
+                </li>
+                <li><a href="main_menu.html">
+                    <img src="images/home.svg" alt="Главная" class="menu-icon">
+                    <span>Главное меню</span>
+                </a></li>
+                <li><a href="notes.html">
+                    <img src="images/notes.svg" alt="Заметки" class="menu-icon">
+                    <span>Заметки</span>
+                </a></li>
+                <li><a href="planner.html">
+                    <img src="images/planner.svg" alt="Планировщик" class="menu-icon">
+                    <span>Планнер</span>
+                </a></li>
+                <li><a href="calculator.html">
+                    <img src="images/calculator.svg" alt="Калькулятор" class="menu-icon">
+                    <span>Калькулятор</span>
+                </a></li>  
+                <li><a href="library.html">
+                    <img src="images/library.svg" alt="Библиотека" class="menu-icon">
+                    <span>Библиотека</span>
+                </a></li>
+                <li><a href="pers_prog.html">
+                    <img src="images/pers_prog.svg" alt="Индивидуальная программа обучения" class="menu-icon">
+                    <span>Индивидуальная программа</span>
+                </a></li>
+                <li><a href="study_mat.html">
+                    <img src="images/study.svg" alt="Учеба" class="menu-icon">
+                    <span>Учебные материалы</span>
+                </a></li>
+                <li><a href="settings.html" class="active">
+                    <img src="images/settings.svg" alt="Настройки" class="menu-icon">
+                    <span>Настройки</span>
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main class="main-content main-content-pinned">
+        <div class="settings-fullscreen-container">
+            <!-- Навигация по разделам -->
+            <div class="settings-sidebar">
+                <div class="settings-nav-item active" data-section="appearance">
+                    🎨 Внешний вид
+                </div>
+                <div class="settings-nav-item" data-section="data">
+                    💾 Данные
+                </div>
+                <div class="settings-nav-item" data-section="notifications">
+                    🔔 Уведомления
+                </div>
+                <div class="settings-nav-item" data-section="backup">
+                    📦 Резервные копии
+                </div>
+                <div class="settings-nav-item" data-section="about">
+                    ℹ️ О программе
+                </div>
+            </div>
+
+            <!-- Контент настроек -->
+            <div class="settings-content">
+                
+                <!-- Раздел: Внешний вид -->
+                <div class="settings-section active" id="appearance-section">
+                    <h2>🎨 Внешний вид</h2>
+                    
+                    <div class="setting-group">
+                        <label>Тема оформления</label>
+                        <div class="theme-selector">
+                            <div class="theme-option" data-theme="dark">
+                                <div class="theme-preview dark-theme"></div>
+                                <span>Темная</span>
+                            </div>
+                            <div class="theme-option" data-theme="light">
+                                <div class="theme-preview light-theme"></div>
+                                <span>Светлая</span>
+                            </div>
+                            <div class="theme-option active" data-theme="blue">
+                                <div class="theme-preview blue-theme"></div>
+                                <span>Синяя</span>
+                            </div>
+                            <div class="theme-option" data-theme="auto">
+                                <div class="theme-preview auto-theme"></div>
+                                <span>Авто</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Раздел: Управление данными -->
+                <div class="settings-section" id="data-section">
+                    <h2>💾 Управление данными</h2>
+                    
+                    <div class="setting-group">
+                        <label>Папка для хранения данных</label>
+                        <div class="path-selector">
+                            <input type="text" id="dataPath" readonly value="/home/user/NoteGrab/data">
+                            <button class="btn-browse">Обзор...</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Автосохранение</label>
+                        <select id="autoSave">
+                            <option value="30000">Каждые 30 секунд</option>
+                            <option value="60000" selected>Каждую минуту</option>
+                            <option value="300000">Каждые 5 минут</option>
+                            <option value="0">Отключено</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <button class="btn-export" data-format="json">📤 Экспорт в JSON</button>
+                        <button class="btn-export" data-format="markdown">📤 Экспорт в Markdown</button>
+                        <button class="btn-import">📥 Импорт данных</button>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h3>⚡ Опасная зона</h3>
+                        <button class="btn-danger" id="clearData">🗑️ Очистить все данные</button>
+                        <button class="btn-danger" id="resetSettings">🔄 Сбросить настройки</button>
+                    </div>
+                </div>
+
+                <!-- Раздел: Уведомления -->
+                <div class="settings-section" id="notifications-section">
+                    <h2>🔔 Уведомления</h2>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableNotifications" checked>
+                            Включить уведомления
+                        </label>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="taskReminders" checked>
+                            Напоминания о задачах
+                        </label>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="backupReminders">
+                            Уведомления о бэкапах
+                        </label>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="soundEnabled">
+                            Звуковые уведомления
+                        </label>
+                    </div>
+                </div>
+                <!-- Раздел: Резервные копии -->
+                <div class="settings-section" id="backup-section">
+                    <h2>📦 Резервные копии</h2>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoBackup" checked>
+                            Автоматическое резервное копирование
+                        </label>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Частота бэкапов</label>
+                        <select id="backupFrequency">
+                            <option value="daily">Ежедневно</option>
+                            <option value="weekly" selected>Еженедельно</option>
+                            <option value="monthly">Ежемесячно</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Папка для бэкапов</label>
+                        <div class="path-selector">
+                            <input type="text" id="backupPath" readonly value="/home/user/NoteGrab/backups">
+                            <button class="btn-browse">Обзор...</button>
+                        </div>
+                    </div>
+
+                    <div class="backup-actions">
+                        <button class="btn-backup-now">💾 Создать бэкап сейчас</button>
+                        <button class="btn-restore">🔄 Восстановить из бэкапа</button>
+                    </div>
+
+                    <div class="backup-history">
+                        <h3>История бэкапов</h3>
+                        <div class="backup-list">
+                            <!-- Список бэкапов будет здесь -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раздел: О программе -->
+                <div class="settings-section" id="about-section">
+                    <h2>ℹ️ О программе</h2>
+                    
+                    <div class="about-content">
+                        <img src="images/logo.png" alt="NoteGrab" class="about-logo">
+                        <h3>NoteGrab v1.0.0</h3>
+                        <p>Умный менеджер заметок и учебных материалов</p>
+                        
+                        <div class="about-links">
+                            <a href="#" class="about-link">📖 Документация</a>
+                            <a href="#" class="about-link">🐛 Сообщить об ошибке</a>
+                            <a href="#" class="about-link">⭐ Оценить приложение</a>
+                        </div>
+
+                        <div class="system-info">
+                            <h4>Системная информация</h4>
+                            <p>Версия Electron: <span id="electron-version"></span></p>
+                            <p>Версия Node.js: <span id="node-version"></span></p>
+                            <p>Платформа: <span id="platform"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/settings.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteGrab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="sidebar sidebar-pinned">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="images/logo.png" alt="Лого">
+      </div>
+      <div class="system-title">NoteGrab</div>
+      <div class="sidebar-pin">
+        <button id="pinToggle" class="pin-button">📌</button>
+      </div>
+    </div>
+    <nav>
+      <ul class="sidebar-menu">
+        <li><a href="main_menu.html">
+          <img src="images/home.svg" alt="Главная" class="menu-icon">
+          <span>Главное меню</span>
+        </a></li>
+        <li><a href="notes.html">
+          <img src="images/notes.svg" alt="Заметки" class="menu-icon">
+          <span>Заметки</span>
+        </a></li>
+        <li><a href="planner.html">
+          <img src="images/planner.svg" alt="Планнер" class="menu-icon">
+          <span>Планнер</span>
+        </a></li>
+        <li><a href="calculator.html">
+            <img src="images/calculator.svg" alt="Калькулятор" class="menu-icon">
+            <span>Калькулятор</span>
+        </a></li>  
+        <li><a href="library.html" class="active">
+          <img src="images/library.svg" alt="Библиотека" class="menu-icon">
+          <span>Библиотека</span>
+        </a></li>
+        <li><a href="pers_prog.html">
+          <img src="images/pers_prog.svg" alt="Индивидуальная программа обучения" class="menu-icon">
+          <span>Индивидуальная программа</span>
+        </a></li>
+        <li><a href="study_mat.html">
+          <img src="images/study.svg" alt="Учеба" class="menu-icon">
+          <span>Учебные материалы</span>
+        </a></li>
+        <li><a href="settings.html">
+          <img src="images/settings.svg" alt="Настройки" class="menu-icon">
+          <span>Настройки</span>
+        </a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main class="main-content main-content-pinned">
+    <div class="welcome-section">
+      <h1>Библиотека</h1>
+      <p class="subtitle">Ваша коллекция литературы для чтения</p>
+
+      <div class="library-controls">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Поиск по книгам...">
+        </div>
+
+        <div class="control-buttons">
+          <select id="genre-filter" class="filter-select">
+            <option value="all">Все жанры</option>
+          </select>
+
+          <select id="sort-by" class="filter-select">
+            <option value="title">По названию</option>
+            <option value="author">По автору</option>
+            <option value="date-added">По дате добавления</option>
+          </select>
+
+          <button id="add-book-btn" class="add-book-button">
+            <span>+ Добавить свою книгу</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="books-container" class="books-grid">
+        <!-- Книги будут добавляться сюда через JavaScript -->
+      </div>
+    </div>
+
+    <!-- Модальное окно для добавления книги -->
+    <div id="add-book-modal" class="library-modal">
+      <div class="library-modal-content">
+        <span class="close">&times;</span>
+        <h2>Добавить новую книгу</h2>
+        <form id="book-form">
+          <div class="form-group">
+            <label for="title">Название книги *</label>
+            <input type="text" id="title" name="title" placeholder="Введите название книги" required>
+          </div>
+
+          <div class="form-group">
+            <label for="author">Автор *</label>
+            <input type="text" id="author" name="author" placeholder="Введите автора" required>
+          </div>
+
+          <div class="form-group">
+            <label for="genre">Жанр</label>
+            <input type="text" id="genre" name="genre" placeholder="Например: Фантастика, Классика">
+          </div>
+
+          <div class="form-group">
+            <label for="description">Описание</label>
+            <textarea id="description" name="description" placeholder="Краткое описание книги" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="book-file">Файл книги *</label>
+            <input type="file" id="book-file" name="book-file" accept=".epub,.pdf,.txt,.fb2" required>
+            <small>Поддерживаемые форматы: EPUB, PDF, TXT, FB2</small>
+          </div>
+
+          <div class="form-group">
+            <label for="cover-image">Обложка книги</label>
+            <input type="file" id="cover-image" name="cover-image" accept="image/*">
+            <div id="cover-preview" class="cover-preview"></div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" id="cancel-btn">Отмена</button>
+            <button type="submit" class="submit-btn">Добавить книгу</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Зона перетаскивания -->
+    <div id="drop-zone" class="drop-zone">
+      <div class="drop-zone-content">
+        <div class="drop-zone-icon">📚</div>
+        <h3>Перетащите книги сюда</h3>
+        <p>Поддерживаются форматы: EPUB, PDF, TXT, FB2</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/library.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
