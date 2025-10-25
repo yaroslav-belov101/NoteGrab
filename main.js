@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 let mainWindow;
 let readerWindow = null;
@@ -116,43 +116,113 @@ function setupFileProtocol(window) {
   });
 }
 
+// ==================== УТИЛИТЫ ДЛЯ РАБОТЫ С ФАЙЛАМИ ====================
+
+async function ensureDirectoryExists(dirPath) {
+  try {
+    await fs.access(dirPath);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('📁 Создаем директорию:', dirPath);
+      await fs.mkdir(dirPath, { recursive: true });
+    } else {
+      throw error;
+    }
+  }
+}
+
+function fileExistsSync(filePath) {
+  try {
+    require('fs').accessSync(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function findExistingFilePath(filePath) {
+  const fsSync = require('fs');
+  const possiblePaths = [
+    filePath,
+    path.resolve(process.cwd(), filePath),
+    path.resolve(__dirname, filePath),
+    path.resolve(process.cwd(), 'books', path.basename(filePath)),
+    path.resolve(__dirname, 'books', path.basename(filePath))
+  ];
+  
+  for (const possiblePath of possiblePaths) {
+    if (fsSync.existsSync(possiblePath)) {
+      return possiblePath;
+    }
+  }
+  return null;
+}
+
 // ==================== IPC ОБРАБОТЧИКИ ДЛЯ РАБОТЫ С ФАЙЛАМИ ====================
 
-// Чтение текстовых файлов
+// Универсальный обработчик для чтения файлов (включая planner.json)
 ipcMain.handle('read-file', async (event, filePath) => {
   try {
     console.log('📖 Попытка чтения файла:', filePath);
     
-    // Пробуем разные варианты путей
-    const possiblePaths = [
-      filePath,
-      path.resolve(process.cwd(), filePath),
-      path.resolve(__dirname, filePath),
-      path.resolve(process.cwd(), 'books', path.basename(filePath)),
-      path.resolve(__dirname, 'books', path.basename(filePath))
-    ];
-    
-    let foundPath = null;
-    for (const possiblePath of possiblePaths) {
-      console.log('🔍 Проверяем путь:', possiblePath);
-      if (fs.existsSync(possiblePath)) {
-        foundPath = possiblePath;
-        console.log('✅ Файл найден:', foundPath);
-        break;
+    // Для planner.json создаем директорию и файл если нужно
+    if (filePath.includes('planner.json')) {
+      const fullPath = path.join(__dirname, filePath);
+      await ensureDirectoryExists(path.dirname(fullPath));
+      
+      try {
+        const data = await fs.readFile(fullPath, 'utf-8');
+        console.log('✅ Planner.json загружен');
+        return data;
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          const initialData = {
+            tasks: [],
+            createdAt: new Date().toISOString(),
+            lastUpdated: new Date().toISOString()
+          };
+          await fs.writeFile(fullPath, JSON.stringify(initialData, null, 2));
+          console.log('✅ Planner.json создан с начальными данными');
+          return JSON.stringify(initialData);
+        }
+        throw error;
       }
     }
     
+    // Для остальных файлов используем старую логику
+    const foundPath = findExistingFilePath(filePath);
+    
     if (!foundPath) {
       console.error('❌ Файл не найден ни по одному пути');
-      return { success: false, error: 'File not found' };
+      return JSON.stringify({ success: false, error: 'File not found' });
     }
     
-    const content = fs.readFileSync(foundPath, 'utf-8');
-    return { success: true, content, path: foundPath };
+    const content = await fs.readFile(foundPath, 'utf-8');
+    console.log('✅ Файл прочитан:', foundPath);
+    return content;
     
   } catch (error) {
     console.error('❌ Ошибка чтения файла:', error);
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
+  }
+});
+
+// Универсальный обработчик для записи файлов (включая planner.json)
+ipcMain.handle('write-file', async (event, filePath, data) => {
+  try {
+    console.log('💾 Попытка записи файла:', filePath);
+    
+    const fullPath = path.join(__dirname, filePath);
+    await ensureDirectoryExists(path.dirname(fullPath));
+    
+    await fs.writeFile(fullPath, data, 'utf-8');
+    console.log('✅ Файл успешно записан:', fullPath);
+    
+    return JSON.stringify({ success: true });
+    
+  } catch (error) {
+    console.error('❌ Ошибка записи файла:', error);
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -161,47 +231,30 @@ ipcMain.handle('read-binary-file', async (event, filePath) => {
   try {
     console.log('📄 Чтение бинарного файла:', filePath);
     
-    // Пробуем разные варианты путей
-    const possiblePaths = [
-      filePath,
-      path.resolve(process.cwd(), filePath),
-      path.resolve(__dirname, filePath),
-      path.resolve(process.cwd(), 'books', path.basename(filePath)),
-      path.resolve(__dirname, 'books', path.basename(filePath))
-    ];
-    
-    let foundPath = null;
-    for (const possiblePath of possiblePaths) {
-      console.log('🔍 Проверяем путь:', possiblePath);
-      if (fs.existsSync(possiblePath)) {
-        foundPath = possiblePath;
-        console.log('✅ Бинарный файл найден:', foundPath);
-        break;
-      }
-    }
+    const foundPath = findExistingFilePath(filePath);
     
     if (!foundPath) {
       console.error('❌ Бинарный файл не найден ни по одному пути');
-      return { success: false, error: 'Binary file not found' };
+      return JSON.stringify({ success: false, error: 'Binary file not found' });
     }
     
     // Читаем как бинарные данные
-    const data = fs.readFileSync(foundPath);
+    const data = await fs.readFile(foundPath);
     
     // Конвертируем в строку для передачи
     const binaryString = data.toString('binary');
     
     console.log(`✅ Бинарный файл прочитан: ${data.length} байт`);
-    return { 
+    return JSON.stringify({ 
       success: true, 
       content: binaryString, 
       path: foundPath,
       size: data.length 
-    };
+    });
     
   } catch (error) {
     console.error('❌ Ошибка чтения бинарного файла:', error);
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -210,23 +263,11 @@ ipcMain.handle('file-exists', async (event, filePath) => {
   try {
     console.log('🔍 Проверка существования файла:', filePath);
     
-    const possiblePaths = [
-      filePath,
-      path.resolve(process.cwd(), filePath),
-      path.resolve(__dirname, filePath),
-      path.resolve(process.cwd(), 'books', path.basename(filePath)),
-      path.resolve(__dirname, 'books', path.basename(filePath))
-    ];
+    const foundPath = findExistingFilePath(filePath);
+    const exists = foundPath !== null;
     
-    for (const possiblePath of possiblePaths) {
-      if (fs.existsSync(possiblePath)) {
-        console.log('✅ Файл существует:', possiblePath);
-        return true;
-      }
-    }
-    
-    console.log('❌ Файл не существует');
-    return false;
+    console.log(exists ? '✅ Файл существует' : '❌ Файл не существует');
+    return exists;
     
   } catch (error) {
     console.error('❌ Ошибка проверки файла:', error);
@@ -239,19 +280,11 @@ ipcMain.handle('get-file-path', async (event, relativePath) => {
   try {
     console.log('📍 Получение абсолютного пути для:', relativePath);
     
-    const possiblePaths = [
-      relativePath,
-      path.resolve(process.cwd(), relativePath),
-      path.resolve(__dirname, relativePath),
-      path.resolve(process.cwd(), 'books', path.basename(relativePath)),
-      path.resolve(__dirname, 'books', path.basename(relativePath))
-    ];
+    const foundPath = findExistingFilePath(relativePath);
     
-    for (const possiblePath of possiblePaths) {
-      if (fs.existsSync(possiblePath)) {
-        console.log('✅ Найден существующий путь:', possiblePath);
-        return possiblePath;
-      }
+    if (foundPath) {
+      console.log('✅ Найден существующий путь:', foundPath);
+      return foundPath;
     }
     
     // Если файл не существует, возвращаем наиболее вероятный путь
@@ -270,30 +303,17 @@ ipcMain.handle('get-file-info', async (event, filePath) => {
   try {
     console.log('📊 Получение информации о файле:', filePath);
     
-    const possiblePaths = [
-      filePath,
-      path.resolve(process.cwd(), filePath),
-      path.resolve(__dirname, filePath),
-      path.resolve(process.cwd(), 'books', path.basename(filePath)),
-      path.resolve(__dirname, 'books', path.basename(filePath))
-    ];
-    
-    let foundPath = null;
-    for (const possiblePath of possiblePaths) {
-      if (fs.existsSync(possiblePath)) {
-        foundPath = possiblePath;
-        break;
-      }
-    }
+    const foundPath = findExistingFilePath(filePath);
     
     if (!foundPath) {
-      return { success: false, error: 'File not found' };
+      return JSON.stringify({ success: false, error: 'File not found' });
     }
     
-    const stats = fs.statSync(foundPath);
+    const fsSync = require('fs');
+    const stats = fsSync.statSync(foundPath);
     const fileExtension = path.extname(foundPath).toLowerCase();
     
-    return {
+    const fileInfo = {
       success: true,
       path: foundPath,
       size: stats.size,
@@ -303,9 +323,11 @@ ipcMain.handle('get-file-info', async (event, filePath) => {
       sizeMB: (stats.size / (1024 * 1024)).toFixed(2)
     };
     
+    return JSON.stringify(fileInfo);
+    
   } catch (error) {
     console.error('❌ Ошибка получения информации о файле:', error);
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -340,12 +362,12 @@ ipcMain.handle('save-file', async (event, content, defaultPath) => {
     });
 
     if (!result.canceled) {
-      fs.writeFileSync(result.filePath, content, 'utf-8');
-      return { success: true, path: result.filePath };
+      await fs.writeFile(result.filePath, content, 'utf-8');
+      return JSON.stringify({ success: true, path: result.filePath });
     }
-    return { success: false, error: 'Save canceled' };
+    return JSON.stringify({ success: false, error: 'Save canceled' });
   } catch (error) {
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -354,10 +376,10 @@ ipcMain.handle('open-reader-window', async (event) => {
   console.log('📖 Открытие окна читалки');
   try {
     createReaderWindow();
-    return { success: true };
+    return JSON.stringify({ success: true });
   } catch (error) {
     console.error('❌ Ошибка создания окна читалки:', error);
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -368,7 +390,7 @@ ipcMain.handle('close-reader-window', async (event) => {
     readerWindow.close();
     readerWindow = null;
   }
-  return { success: true };
+  return JSON.stringify({ success: true });
 });
 
 // Открытие файла в системном просмотрщике
@@ -376,32 +398,18 @@ ipcMain.handle('open-in-system-viewer', async (event, filePath) => {
   try {
     console.log('📂 Открытие файла в системном просмотрщике:', filePath);
     
-    const possiblePaths = [
-      filePath,
-      path.resolve(process.cwd(), filePath),
-      path.resolve(__dirname, filePath),
-      path.resolve(process.cwd(), 'books', path.basename(filePath)),
-      path.resolve(__dirname, 'books', path.basename(filePath))
-    ];
-    
-    let foundPath = null;
-    for (const possiblePath of possiblePaths) {
-      if (fs.existsSync(possiblePath)) {
-        foundPath = possiblePath;
-        break;
-      }
-    }
+    const foundPath = findExistingFilePath(filePath);
     
     if (!foundPath) {
-      return { success: false, error: 'File not found for system viewer' };
+      return JSON.stringify({ success: false, error: 'File not found for system viewer' });
     }
     
     await shell.openPath(foundPath);
-    return { success: true };
+    return JSON.stringify({ success: true });
     
   } catch (error) {
     console.error('❌ Ошибка открытия файла в системном просмотрщике:', error);
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 
@@ -410,20 +418,21 @@ ipcMain.handle('get-directory-files', async (event, directoryPath) => {
   try {
     const fullPath = path.resolve(process.cwd(), directoryPath);
     
-    if (!fs.existsSync(fullPath)) {
-      return { success: false, error: 'Directory not found' };
+    if (!fileExistsSync(fullPath)) {
+      return JSON.stringify({ success: false, error: 'Directory not found' });
     }
     
-    const files = fs.readdirSync(fullPath);
+    const fsSync = require('fs');
+    const files = fsSync.readdirSync(fullPath);
     const bookFiles = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
       return ['.pdf', '.epub', '.txt', '.fb2'].includes(ext);
     });
     
-    return { success: true, files: bookFiles };
+    return JSON.stringify({ success: true, files: bookFiles });
     
   } catch (error) {
-    return { success: false, error: error.message };
+    return JSON.stringify({ success: false, error: error.message });
   }
 });
 

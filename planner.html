@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NoteGrab</title>
+    <title>NoteGrab - Планнер</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -66,11 +66,46 @@
     <main class="main-content main-content-pinned">
         <div class="welcome-section">
             <h1>Планнер</h1>
-            <p class="subtitle">Здесь будет календарь и планировщик задач.</p>
+            <p class="subtitle">Организуйте свое время эффективно</p>
+            
+            <div class="planner-controls">
+                <button id="prevMonth" class="control-btn">‹</button>
+                <div class="current-month-display">
+                    <span id="currentMonthYear"></span>
+                </div>
+                <button id="nextMonth" class="control-btn">›</button>
+            </div>
+            
+            <div class="calendar">
+                <header class="calendar__header">
+                    <div class="calendar__month" id="displayMonth"></div>
+                    <div class="calendar__year" id="displayYear"></div>
+                </header>
+                <div class="calendar__grid">
+                    <div class="calendar__day-names">
+                        <span class="calendar__day-name">Пн</span>
+                        <span class="calendar__day-name">Вт</span>
+                        <span class="calendar__day-name">Ср</span>
+                        <span class="calendar__day-name">Чт</span>
+                        <span class="calendar__day-name">Пт</span>
+                        <span class="calendar__day-name">Сб</span>
+                        <span class="calendar__day-name">Вс</span>
+                    </div>
+                    <div class="calendar__day-numbers" id="calendarDays"></div>
+                </div>
+            </div>
+            
+            <div class="tasks-section">
+                <h3>Задачи на сегодня</h3>
+                <div class="task-input-container">
+                    <input type="text" id="taskInput" placeholder="Добавить новую задачу...">
+                    <button id="addTaskBtn" class="add-task-btn">+</button>
+                </div>
+                <div class="tasks-list" id="tasksList"></div>
+            </div>
         </div>
-    
     </main>
 
-    <script src="script.js"></script>
+    <script src="js/planner.js"></script>
 </body>
 </html>

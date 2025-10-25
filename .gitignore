@@ -7,3 +7,6 @@ build/
 node_modules/
 .DS_Store
 *.log
+data_lib/
+data_note/
+data/plan
