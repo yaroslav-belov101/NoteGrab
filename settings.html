@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NoteGrab</title>
+    <title>NoteGrab - Настройки</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -68,19 +68,28 @@
             <!-- Навигация по разделам -->
             <div class="settings-sidebar">
                 <div class="settings-nav-item active" data-section="appearance">
-                    🎨 Внешний вид
+                    <span class="nav-icon">🎨</span>
+                    <span class="nav-text">Внешний вид</span>
                 </div>
                 <div class="settings-nav-item" data-section="data">
-                    💾 Данные
+                    <span class="nav-icon">💾</span>
+                    <span class="nav-text">Данные</span>
                 </div>
                 <div class="settings-nav-item" data-section="notifications">
-                    🔔 Уведомления
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-text">Уведомления</span>
                 </div>
                 <div class="settings-nav-item" data-section="backup">
-                    📦 Резервные копии
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Резервные копии</span>
+                </div>
+                <div class="settings-nav-item" data-section="shortcuts">
+                    <span class="nav-icon">⌨️</span>
+                    <span class="nav-text">Горячие клавиши</span>
                 </div>
                 <div class="settings-nav-item" data-section="about">
-                    ℹ️ О программе
+                    <span class="nav-icon">ℹ️</span>
+                    <span class="nav-text">О программе</span>
                 </div>
             </div>
 
@@ -92,42 +101,64 @@
                     <h2>🎨 Внешний вид</h2>
                     
                     <div class="setting-group">
-                        <label>Тема оформления</label>
+                        <label class="setting-label">Тема оформления</label>
                         <div class="theme-selector">
-                            <div class="theme-option" data-theme="dark">
+                            <div class="theme-option active" data-theme="dark">
                                 <div class="theme-preview dark-theme"></div>
-                                <span>Темная</span>
+                                <span class="theme-name">Темная</span>
                             </div>
                             <div class="theme-option" data-theme="light">
                                 <div class="theme-preview light-theme"></div>
-                                <span>Светлая</span>
+                                <span class="theme-name">Светлая</span>
                             </div>
-                            <div class="theme-option active" data-theme="blue">
+                            <div class="theme-option" data-theme="blue">
                                 <div class="theme-preview blue-theme"></div>
-                                <span>Синяя</span>
-                            </div>
-                            <div class="theme-option" data-theme="auto">
-                                <div class="theme-preview auto-theme"></div>
-                                <span>Авто</span>
+                                <span class="theme-name">Синяя</span>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label" for="uiSize">Размер интерфейса</label>
+                        <select id="uiSize" class="setting-select">
+                            <option value="compact">Компактный</option>
+                            <option value="normal" selected>Обычный</option>
+                            <option value="large">Крупный</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label" for="accentColor">Акцентный цвет</label>
+                        <div class="color-picker-container">
+                            <input type="color" id="accentColor" class="color-picker" value="#6366f1">
+                            <span class="color-value">#6366f1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-checkbox">
+                            <input type="checkbox" id="compactSidebar">
+                            <span class="checkmark"></span>
+                            Компактный сайдбар
+                        </label>
+                    </div>
                 </div>
+
                 <!-- Раздел: Управление данными -->
                 <div class="settings-section" id="data-section">
                     <h2>💾 Управление данными</h2>
                     
                     <div class="setting-group">
-                        <label>Папка для хранения данных</label>
+                        <label class="setting-label">Папка для хранения данных</label>
                         <div class="path-selector">
-                            <input type="text" id="dataPath" readonly value="/home/user/NoteGrab/data">
+                            <input type="text" id="dataPath" class="path-input" readonly value="/home/user/NoteGrab/data">
                             <button class="btn-browse">Обзор...</button>
                         </div>
                     </div>
 
                     <div class="setting-group">
-                        <label>Автосохранение</label>
-                        <select id="autoSave">
+                        <label class="setting-label" for="autoSave">Автосохранение</label>
+                        <select id="autoSave" class="setting-select">
                             <option value="30000">Каждые 30 секунд</option>
                             <option value="60000" selected>Каждую минуту</option>
                             <option value="300000">Каждые 5 минут</option>
@@ -136,15 +167,21 @@
                     </div>
 
                     <div class="setting-group">
-                        <button class="btn-export" data-format="json">📤 Экспорт в JSON</button>
-                        <button class="btn-export" data-format="markdown">📤 Экспорт в Markdown</button>
-                        <button class="btn-import">📥 Импорт данных</button>
+                        <label class="setting-label">Экспорт данных</label>
+                        <div class="export-buttons">
+                            <button class="btn-export" data-format="json">📤 Экспорт в JSON</button>
+                            <button class="btn-export" data-format="markdown">📤 Экспорт в Markdown</button>
+                            <button class="btn-import">📥 Импорт данных</button>
+                        </div>
                     </div>
 
                     <div class="danger-zone">
                         <h3>⚡ Опасная зона</h3>
-                        <button class="btn-danger" id="clearData">🗑️ Очистить все данные</button>
-                        <button class="btn-danger" id="resetSettings">🔄 Сбросить настройки</button>
+                        <p>Эти действия нельзя отменить. Будьте осторожны.</p>
+                        <div class="danger-buttons">
+                            <button class="btn-danger" id="clearData">🗑️ Очистить все данные</button>
+                            <button class="btn-danger" id="resetSettings">🔄 Сбросить настройки</button>
+                        </div>
                     </div>
                 </div>
 
@@ -153,47 +190,58 @@
                     <h2>🔔 Уведомления</h2>
                     
                     <div class="setting-group">
-                        <label>
+                        <label class="setting-checkbox">
                             <input type="checkbox" id="enableNotifications" checked>
+                            <span class="checkmark"></span>
                             Включить уведомления
                         </label>
                     </div>
 
                     <div class="setting-group">
-                        <label>
+                        <label class="setting-checkbox">
                             <input type="checkbox" id="taskReminders" checked>
+                            <span class="checkmark"></span>
                             Напоминания о задачах
                         </label>
                     </div>
 
                     <div class="setting-group">
-                        <label>
+                        <label class="setting-checkbox">
                             <input type="checkbox" id="backupReminders">
+                            <span class="checkmark"></span>
                             Уведомления о бэкапах
                         </label>
                     </div>
 
                     <div class="setting-group">
-                        <label>
+                        <label class="setting-checkbox">
                             <input type="checkbox" id="soundEnabled">
+                            <span class="checkmark"></span>
                             Звуковые уведомления
                         </label>
                     </div>
+                    
+                    <div class="setting-group">
+                        <label class="setting-label" for="reminderTime">Время напоминаний</label>
+                        <input type="time" id="reminderTime" class="setting-time" value="09:00">
+                    </div>
                 </div>
+
                 <!-- Раздел: Резервные копии -->
                 <div class="settings-section" id="backup-section">
                     <h2>📦 Резервные копии</h2>
                     
                     <div class="setting-group">
-                        <label>
+                        <label class="setting-checkbox">
                             <input type="checkbox" id="autoBackup" checked>
+                            <span class="checkmark"></span>
                             Автоматическое резервное копирование
                         </label>
                     </div>
 
                     <div class="setting-group">
-                        <label>Частота бэкапов</label>
-                        <select id="backupFrequency">
+                        <label class="setting-label" for="backupFrequency">Частота бэкапов</label>
+                        <select id="backupFrequency" class="setting-select">
                             <option value="daily">Ежедневно</option>
                             <option value="weekly" selected>Еженедельно</option>
                             <option value="monthly">Ежемесячно</option>
@@ -201,9 +249,9 @@
                     </div>
 
                     <div class="setting-group">
-                        <label>Папка для бэкапов</label>
+                        <label class="setting-label">Папка для бэкапов</label>
                         <div class="path-selector">
-                            <input type="text" id="backupPath" readonly value="/home/user/NoteGrab/backups">
+                            <input type="text" id="backupPath" class="path-input" readonly value="/home/user/NoteGrab/backups">
                             <button class="btn-browse">Обзор...</button>
                         </div>
                     </div>
@@ -220,6 +268,46 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Раздел: Горячие клавиши -->
+                <div class="settings-section" id="shortcuts-section">
+                    <h2>⌨️ Горячие клавиши</h2>
+                    
+                    <div class="shortcuts-list">
+                        <div class="shortcut-item">
+                            <span class="shortcut-description">Новая заметка</span>
+                            <div class="shortcut-keys">
+                                <kbd>Ctrl</kbd> + <kbd>N</kbd>
+                            </div>
+                            <button class="btn-edit-shortcut">Изменить</button>
+                        </div>
+                        <div class="shortcut-item">
+                            <span class="shortcut-description">Поиск</span>
+                            <div class="shortcut-keys">
+                                <kbd>Ctrl</kbd> + <kbd>F</kbd>
+                            </div>
+                            <button class="btn-edit-shortcut">Изменить</button>
+                        </div>
+                        <div class="shortcut-item">
+                            <span class="shortcut-description">Сохранить</span>
+                            <div class="shortcut-keys">
+                                <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                            </div>
+                            <button class="btn-edit-shortcut">Изменить</button>
+                        </div>
+                        <div class="shortcut-item">
+                            <span class="shortcut-description">Экспорт</span>
+                            <div class="shortcut-keys">
+                                <kbd>Ctrl</kbd> + <kbd>E</kbd>
+                            </div>
+                            <button class="btn-edit-shortcut">Изменить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <button class="btn-reset-shortcuts">🔄 Сбросить все сочетания клавиш</button>
+                    </div>
+                </div>
 
                 <!-- Раздел: О программе -->
                 <div class="settings-section" id="about-section">
@@ -228,7 +316,7 @@
                     <div class="about-content">
                         <img src="images/logo.png" alt="NoteGrab" class="about-logo">
                         <h3>NoteGrab v1.0.0</h3>
-                        <p>Умный менеджер заметок и учебных материалов</p>
+                        <p class="about-description">Умный менеджер заметок и учебных материалов</p>
                         
                         <div class="about-links">
                             <a href="#" class="about-link">📖 Документация</a>
@@ -238,9 +326,20 @@
 
                         <div class="system-info">
                             <h4>Системная информация</h4>
-                            <p>Версия Electron: <span id="electron-version"></span></p>
-                            <p>Версия Node.js: <span id="node-version"></span></p>
-                            <p>Платформа: <span id="platform"></span></p>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Версия Electron:</span>
+                                    <span class="info-value" id="electron-version">N/A</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Версия Node.js:</span>
+                                    <span class="info-value" id="node-version">N/A</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Платформа:</span>
+                                    <span class="info-value" id="platform">N/A</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -248,7 +347,19 @@
         </div>
     </main>
 
+    <!-- Модальное окно подтверждения -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 id="confirmTitle">Подтверждение действия</h3>
+            <p id="confirmMessage">Вы уверены, что хотите выполнить это действие?</p>
+            <div class="modal-actions">
+                <button id="confirmCancel" class="btn-cancel">Отмена</button>
+                <button id="confirmOk" class="btn-confirm">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/settings.js"></script>
-    <script src="script.js"></script>
+    <script src="js/theme-loader.js"></script>
 </body>
 </html>
