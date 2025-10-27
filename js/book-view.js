@@ -176,7 +176,7 @@ function getFileFormat(filePath) {
 }
 
 function startReading(bookId) {
-    console.log('📖 Запуск чтения книги:', bookId);
+    console.log('📖 Запуск чтения книги в текущем окне:', bookId);
     
     // Сохраняем данные книги для читалки
     const savedBooks = localStorage.getItem('allBooks');
@@ -189,22 +189,9 @@ function startReading(bookId) {
             localStorage.setItem('currentReadingBookId', bookId);
             localStorage.setItem('currentReadingBook', JSON.stringify(book));
             
-            // Открываем читалку в новом окне Electron
-            ipcRenderer.invoke('open-reader-window')
-                .then(result => {
-                    if (result.success) {
-                        console.log('✅ Читалка успешно открыта');
-                    } else {
-                        console.error('❌ Ошибка открытия читалки');
-                        // Fallback: открываем в текущем окне
-                        window.location.href = 'book-reader.html';
-                    }
-                })
-                .catch(error => {
-                    console.error('❌ Ошибка IPC:', error);
-                    // Fallback: открываем в текущем окне
-                    window.location.href = 'book-reader.html';
-                });
+            // Открываем читалку в ТЕКУЩЕМ окне
+            console.log('🔗 Переход на book-reader.html в текущем окне...');
+            window.location.href = 'book-reader.html';
         } else {
             alert('Книга не найдена в библиотеке!');
         }

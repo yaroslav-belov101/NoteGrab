@@ -621,11 +621,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Сохраняем ID книги для страницы просмотра
         localStorage.setItem('currentBookId', bookId);
         
-        // Переходим на страницу просмотра книги
-        console.log('🔗 Переход на book-view.html...');
+        // Переходим на страницу просмотра книги в ТЕКУЩЕМ окне
+        console.log('🔗 Переход на book-view.html в текущем окне...');
         window.location.href = 'book-view.html';
     };
-
     window.openAddBookModal = openAddBookModal;
     window.reloadFromJSON = reloadFromJSON;
 
