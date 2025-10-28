@@ -484,3 +484,64 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 console.log('✅ Main process инициализирован');
+
+// ==================== УПРАВЛЕНИЕ ТЕМОЙ И СОСТОЯНИЕМ ====================
+
+// Глобальное хранилище состояния
+const appState = {
+  theme: 'theme-dark',
+  sidebarPinned: true
+};
+
+// Загрузка состояния при запуске
+ipcMain.handle('load-app-state', async (event) => {
+  try {
+    const statePath = path.join(__dirname, 'app-state.json');
+    if (fileExistsSync(statePath)) {
+      const data = await fs.readFile(statePath, 'utf-8');
+      const savedState = JSON.parse(data);
+      Object.assign(appState, savedState);
+    }
+    return JSON.stringify(appState);
+  } catch (error) {
+    console.log('❌ Ошибка загрузки состояния, используем значения по умолчанию');
+    return JSON.stringify(appState);
+  }
+});
+
+// Сохранение состояния
+ipcMain.handle('save-app-state', async (event, newState) => {
+  try {
+    Object.assign(appState, newState);
+    const statePath = path.join(__dirname, 'app-state.json');
+    await fs.writeFile(statePath, JSON.stringify(appState, null, 2));
+    
+    // Рассылаем обновление всем окнам
+    const windows = BrowserWindow.getAllWindows();
+    windows.forEach(win => {
+      if (win.webContents && !win.webContents.isDestroyed()) {
+        win.webContents.send('app-state-updated', appState);
+      }
+    });
+    
+    return JSON.stringify({ success: true });
+  } catch (error) {
+    console.error('❌ Ошибка сохранения состояния:', error);
+    return JSON.stringify({ success: false, error: error.message });
+  }
+});
+
+// Рассылка обновлений состояния всем окнам
+function broadcastAppState() {
+  const windows = BrowserWindow.getAllWindows();
+  windows.forEach(win => {
+    if (win.webContents && !win.webContents.isDestroyed()) {
+      win.webContents.send('app-state-updated', appState);
+    }
+  });
+}
+
+// Обработчик для получения текущего состояния
+ipcMain.handle('get-app-state', async (event) => {
+  return JSON.stringify(appState);
+});

@@ -2,6 +2,21 @@
 /* ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И ТЕМЫ */
 /* ==================== */
 
+* {
+  transition: none !important;
+}
+
+body {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
 :root {
     --border-radius: 12px;
     --transition: all 0.3s ease;
@@ -53,6 +68,23 @@
   --accent-color: #3b82f6;
   --hover-bg: rgba(59, 130, 246, 0.15);
   --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Принудительное применение темы до загрузки JS */
+body:not(.theme-light):not(.theme-blue) {
+  /* Значения темной темы по умолчанию */
+  --primary-bg: #000000;
+  --secondary-bg: #0a0a0a;
+  --card-bg: #111111;
+  --sidebar-bg: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+  --header-bg: #0a0a0a;
+  --border-color: #333333;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+  --accent-color: #6366f1;
+  --hover-bg: rgba(99, 102, 241, 0.15);
+  --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 /* ==================== */
