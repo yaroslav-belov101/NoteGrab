@@ -11,7 +11,7 @@ NoteGrab — это десктопное приложение, созданно�
 
 
 <div align="center">
-  <img src="images/logo.png" alt="NoteGrab Logo" width="120" style="border-radius: 10px; border: 2px solid #ddd;">
+  <img src="images/logo.png" alt="NoteGrab Logo" width="1200" style="border-radius: 10px; border: 2px solid #ddd;">
   <h1>NoteGrab</h1>
 </div>
 
