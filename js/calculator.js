@@ -18,13 +18,17 @@ function updateDisplay() {
 }
 
 function appendToDisplay(value) {
-    if (shouldResetDisplay) {
+    if (shouldResetDisplay && !isOperator(value) && value !== '(' && value !== ')') {
+        // Если нужно сбросить дисплей и вводится не оператор, сбрасываем
         currentInput = '';
         shouldResetDisplay = false;
         cursorPosition = 0;
+    } else if (shouldResetDisplay && isOperator(value)) {
+        // Если нужно сбросить дисплей и вводится оператор, оставляем результат
+        shouldResetDisplay = false;
     }
     
-    if (currentInput === '0' && value !== '.' && !'()'.includes(value)) {
+    if (currentInput === '0' && value !== '.' && !'()'.includes(value) && !isOperator(value)) {
         currentInput = value;
         cursorPosition = 1;
     } else if (currentInput === '0' && '()'.includes(value)) {
@@ -38,9 +42,15 @@ function appendToDisplay(value) {
     updateDisplay();
 }
 
+// Проверка, является ли символ оператором
+function isOperator(value) {
+    return ['+', '-', '*', '/', '%'].includes(value);
+}
+
 function clearDisplay() {
     currentInput = '0';
     cursorPosition = 0;
+    shouldResetDisplay = false;
     updateDisplay();
 }
 
@@ -52,6 +62,7 @@ function deleteLast() {
         currentInput = '0';
         cursorPosition = 0;
     }
+    shouldResetDisplay = false;
     updateDisplay();
 }
 
@@ -62,6 +73,7 @@ function deleteForward() {
         currentInput = '0';
         cursorPosition = 0;
     }
+    shouldResetDisplay = false;
     updateDisplay();
 }
 
@@ -188,6 +200,7 @@ function togglePlusMinus() {
             currentInput = '-' + currentInput;
         }
         cursorPosition = currentInput.length;
+        shouldResetDisplay = false;
         updateDisplay();
     }
 }
@@ -210,7 +223,7 @@ function calculate() {
             result = Math.round(result * 10000000000) / 10000000000;
             currentInput = formatResult(result);
             cursorPosition = currentInput.length;
-            shouldResetDisplay = true;
+            shouldResetDisplay = true; // Теперь сброс происходит только при вводе чисел
             updateDisplay();
         } else {
             throw new Error('Неверное выражение');
@@ -412,15 +425,17 @@ function handleSpecialAction() {
         navigator.clipboard.writeText(currentInput).then(() => {
             // Визуальная обратная связь
             const actionBtn = document.querySelector('.calculator-action-btn');
-            const originalText = actionBtn.innerHTML;
-            
-            actionBtn.innerHTML = '<span class="btn-icon">✅</span><span>Скопировано!</span>';
-            actionBtn.classList.add('pulse');
-            
-            setTimeout(() => {
-                actionBtn.innerHTML = originalText;
-                actionBtn.classList.remove('pulse');
-            }, 2000);
+            if (actionBtn) {
+                const originalText = actionBtn.innerHTML;
+                
+                actionBtn.innerHTML = '<span class="btn-icon">✅</span><span>Скопировано!</span>';
+                actionBtn.classList.add('pulse');
+                
+                setTimeout(() => {
+                    actionBtn.innerHTML = originalText;
+                    actionBtn.classList.remove('pulse');
+                }, 2000);
+            }
         }).catch(err => {
             console.error('Ошибка копирования: ', err);
             // Альтернативный вариант если clipboard не доступен
@@ -430,16 +445,19 @@ function handleSpecialAction() {
         // Если нет результата, предлагаем пример
         currentInput = '2+2*2';
         cursorPosition = currentInput.length;
+        shouldResetDisplay = false;
         updateDisplay();
         
         const actionBtn = document.querySelector('.calculator-action-btn');
-        const originalText = actionBtn.innerHTML;
-        
-        actionBtn.innerHTML = '<span class="btn-icon">🔢</span><span>Пример добавлен</span>';
-        
-        setTimeout(() => {
-            actionBtn.innerHTML = originalText;
-        }, 1500);
+        if (actionBtn) {
+            const originalText = actionBtn.innerHTML;
+            
+            actionBtn.innerHTML = '<span class="btn-icon">🔢</span><span>Пример добавлен</span>';
+            
+            setTimeout(() => {
+                actionBtn.innerHTML = originalText;
+            }, 1500);
+        }
     }
 }
 
@@ -462,7 +480,9 @@ function showTemporaryMessage(message) {
     document.body.appendChild(messageEl);
     
     setTimeout(() => {
-        document.body.removeChild(messageEl);
+        if (messageEl.parentNode) {
+            document.body.removeChild(messageEl);
+        }
     }, 3000);
 }
 
@@ -476,15 +496,6 @@ document.addEventListener('DOMContentLoaded', function() {
         display.focus();
         cursorPosition = currentInput.length;
         updateDisplay();
-        
-        // Добавляем пульсацию кнопке при загрузке на 3 секунды
-        const actionBtn = document.querySelector('.calculator-action-btn');
-        if (actionBtn) {
-            actionBtn.classList.add('pulse');
-            setTimeout(() => {
-                actionBtn.classList.remove('pulse');
-            }, 3000);
-        }
     }, 100);
     
     display.style.cursor = 'text';

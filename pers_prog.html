@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NoteGrab</title>
+    <title>NoteGrab - Индивидуальная программа</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -66,11 +66,87 @@
     <main class="main-content main-content-pinned">
         <div class="welcome-section">
             <h1>Индивидуальная программа обучения</h1>
-            <p class="subtitle">Здесь будет ваша индивидуальная программа обучения.</p>
+            <p class="subtitle">Ваши учебные задания, отсортированные по срочности</p>
         </div>
-    
+
+        <div class="study-program-container">
+            <!-- Фильтры и статистика -->
+            <div class="program-controls">
+                <div class="program-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalTasks">0</div>
+                        <div class="stat-label">Всего заданий</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pendingTasks">0</div>
+                        <div class="stat-label">В процессе</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="urgentTasks">0</div>
+                        <div class="stat-label">Срочные</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedTasks">0</div>
+                        <div class="stat-label">Выполнено</div>
+                    </div>
+                </div>
+                
+                <div class="program-filters">
+                    <select id="filterStatus" class="filter-select">
+                        <option value="all">Все задания</option>
+                        <option value="pending">Только активные</option>
+                        <option value="completed">Только выполненные</option>
+                        <option value="urgent">Только срочные</option>
+                    </select>
+                    
+                    <select id="sortBy" class="filter-select">
+                        <option value="deadline">По дедлайну (сначала ближайшие)</option>
+                        <option value="priority">По приоритету</option>
+                        <option value="created">По дате создания</option>
+                    </select>
+                    
+                    <button id="refreshBtn" class="refresh-button">
+                        <span>🔄</span>
+                        <span>Обновить</span>
+                    </button>
+                    
+                    <!-- Добавьте эту кнопку -->
+                    <button id="syncBtn" class="sync-button" title="Синхронизировать с планнером">
+                        <span>🔄</span>
+                        <span>Синхронизировать</span>
+                    </button>
+                </div>
+
+            <!-- Список учебных заданий -->
+            <div class="study-tasks-container">
+                <div class="tasks-header">
+                    <h2>Учебные задания</h2>
+                    <div class="tasks-summary" id="tasksSummary">
+                        Загрузка заданий...
+                    </div>
+                </div>
+                
+                <div class="study-tasks-list" id="studyTasksList">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Загрузка учебных заданий...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Состояние пустого списка -->
+            <div class="empty-study-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📚</div>
+                <h3>Нет учебных заданий</h3>
+                <p>Добавьте задания с тегом "обучение" в планнер, чтобы они появились здесь</p>
+                <button onclick="location.href='planner.html'" class="go-to-planner-btn">
+                    Перейти в планнер
+                </button>
+            </div>
+        </div>
     </main>
 
+    <script src="js/pers_prog.js"></script>
     <script src="js/theme-loader.js"></script>
     <script src="js/sidebar-toggle.js"></script>
 </body>

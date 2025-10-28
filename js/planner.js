@@ -54,6 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             tasks = parsedData.tasks || [];
             console.log('✅ Загружено задач:', tasks.length);
+            
+            // Загружаем данные из индивидуальной программы для синхронизации статусов
+            await loadFromStudyProgram();
+            
             updateTasksDisplay();
         } catch (error) {
             console.error('❌ Ошибка загрузки из файла:', error);
@@ -106,6 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (saveResult.success) {
                 console.log('✅ Задачи сохранены в файл');
+                
+                // Автоматическая синхронизация с индивидуальной программой
+                await syncWithStudyProgram();
             } else {
                 throw new Error(saveResult.error || 'Unknown save error');
             }
@@ -116,6 +123,60 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('❌ Ошибка сохранения в файл:', error);
             localStorage.setItem('plannerTasks_fallback', JSON.stringify(tasks));
             showMessage('Ошибка сохранения в файл, данные сохранены локально', 'error');
+        }
+    }
+
+    // Функция синхронизации с индивидуальной программой
+    async function syncWithStudyProgram() {
+        try {
+            console.log('🔄 Синхронизация с индивидуальной программой...');
+            
+            // Создаем или обновляем файл индивидуальной программы
+            const studyProgramData = {
+                tasks: tasks.filter(task => task.tag === 'study'),
+                lastUpdated: new Date().toISOString(),
+                syncedFromPlanner: true
+            };
+
+            await ipcRenderer.invoke('write-file', 'data_plan/study_program.json', JSON.stringify(studyProgramData, null, 2));
+            console.log('✅ Синхронизация с индивидуальной программой завершена');
+            
+        } catch (error) {
+            console.error('❌ Ошибка синхронизации с индивидуальной программой:', error);
+        }
+    }
+    async function loadFromStudyProgram() {
+        try {
+            console.log('🔄 Загрузка данных из индивидуальной программы...');
+            const studyData = await ipcRenderer.invoke('read-file', 'data_plan/study_program.json');
+            
+            let parsedStudyData;
+            try {
+                parsedStudyData = JSON.parse(studyData);
+                if (parsedStudyData.success !== undefined && parsedStudyData.success && parsedStudyData.content) {
+                    parsedStudyData = JSON.parse(parsedStudyData.content);
+                }
+            } catch (parseError) {
+                parsedStudyData = typeof studyData === 'string' ? JSON.parse(studyData) : studyData;
+            }
+            
+            const studyTasks = parsedStudyData.tasks || [];
+            console.log('📚 Задачи из индивидуальной программы:', studyTasks.length);
+            
+            // Синхронизируем статусы выполнения
+            studyTasks.forEach(studyTask => {
+                const plannerTaskIndex = tasks.findIndex(task => task.id === studyTask.id);
+                if (plannerTaskIndex !== -1) {
+                    // Обновляем статус выполнения
+                    tasks[plannerTaskIndex].completed = studyTask.completed;
+                    tasks[plannerTaskIndex].updatedAt = studyTask.updatedAt;
+                }
+            });
+            
+            console.log('✅ Данные из индивидуальной программы синхронизированы');
+            
+        } catch (error) {
+            console.error('❌ Ошибка загрузки из индивидуальной программы:', error);
         }
     }
 
@@ -258,6 +319,77 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('✅ Обработчики событий установлены');
     }
 
+    // Функция для отображения модального окна выбора тега
+    function showTagSelectionModal(taskText, callback) {
+        // Создаем модальное окно
+        const modal = document.createElement('div');
+        modal.className = 'tag-modal-backdrop';
+        modal.innerHTML = `
+            <div class="tag-modal">
+                <div class="tag-modal-header">
+                    <h3>Выберите тип задачи</h3>
+                    <button class="tag-modal-close">×</button>
+                </div>
+                <div class="tag-modal-body">
+                    <p>Задача: "${taskText}"</p>
+                    <div class="tag-options">
+                        <label class="tag-option">
+                            <input type="radio" name="taskTag" value="general" checked>
+                            <span class="tag-option-content">
+                                <span class="tag-option-icon">📝</span>
+                                <span class="tag-option-text">
+                                    <strong>Обычная задача</strong>
+                                    <small>Личные дела, работа, бытовые задачи</small>
+                                </span>
+                            </span>
+                        </label>
+                        <label class="tag-option">
+                            <input type="radio" name="taskTag" value="study">
+                            <span class="tag-option-content">
+                                <span class="tag-option-icon">🎓</span>
+                                <span class="tag-option-text">
+                                    <strong>Учебная задача</strong>
+                                    <small>Появится в индивидуальной программе</small>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="tag-modal-actions">
+                    <button class="tag-btn-cancel">Отмена</button>
+                    <button class="tag-btn-confirm">Добавить задачу</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Обработчики событий
+        const closeBtn = modal.querySelector('.tag-modal-close');
+        const cancelBtn = modal.querySelector('.tag-btn-cancel');
+        const confirmBtn = modal.querySelector('.tag-btn-confirm');
+
+        const closeModal = () => {
+            document.body.removeChild(modal);
+        };
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        confirmBtn.addEventListener('click', () => {
+            const selectedTag = modal.querySelector('input[name="taskTag"]:checked').value;
+            closeModal();
+            callback(selectedTag);
+        });
+
+        // Закрытие по клику на бэкдроп
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
     async function addTask() {
         const taskText = taskInput?.value.trim();
         if (!taskText) {
@@ -265,29 +397,38 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        const taskDate = formatDate(selectedDay, currentMonth, currentYear);
-        const task = {
-            id: Date.now() + Math.random(),
-            text: taskText,
-            date: taskDate,
-            completed: false,
-            createdAt: new Date().toISOString()
-        };
-        
-        console.log('➕ Добавление задачи:', task);
-        
-        tasks.push(task);
-        await saveTasks();
-        
-        if (taskInput) {
-            taskInput.value = '';
-            taskInput.focus();
-        }
-        
-        updateCalendar();
-        updateTasksDisplay();
-        
-        showMessage('Задача добавлена!', 'success');
+        // Показываем модальное окно выбора тега
+        showTagSelectionModal(taskText, async (selectedTag) => {
+            const taskDate = formatDate(selectedDay, currentMonth, currentYear);
+            const task = {
+                id: Date.now() + Math.random(),
+                text: taskText,
+                date: taskDate,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                tag: selectedTag // Сохраняем выбранный тег
+            };
+            
+            console.log('➕ Добавление задачи:', task);
+            
+            tasks.push(task);
+            await saveTasks();
+            
+            if (taskInput) {
+                taskInput.value = '';
+                taskInput.focus();
+            }
+            
+            updateCalendar();
+            updateTasksDisplay();
+            
+            // Показываем сообщение о синхронизации, если это учебная задача
+            if (task.tag === 'study') {
+                showMessage('Учебная задача добавлена и синхронизирована с индивидуальной программой!', 'success');
+            } else {
+                showMessage('Задача добавлена!', 'success');
+            }
+        });
     }
 
     function updateTasksDisplay() {
@@ -310,8 +451,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         tasksList.innerHTML = dayTasks.map(task => `
-            <div class="task-item ${task.completed ? 'task-item--completed' : ''}" data-task-id="${task.id}">
-                <span class="task-text">${escapeHtml(task.text)}</span>
+            <div class="task-item ${task.completed ? 'task-item--completed' : ''} ${task.tag === 'study' ? 'task-item--study' : ''}" data-task-id="${task.id}">
+                <div class="task-content">
+                    <span class="task-text">${escapeHtml(task.text)}</span>
+                    ${task.tag === 'study' ? '<span class="study-badge" title="Учебная задача">🎓</span>' : ''}
+                </div>
                 <div class="task-actions">
                     <button class="task-complete-btn" title="${task.completed ? 'Вернуть в работу' : 'Отметить как выполненную'}">
                         ${task.completed ? '↶' : '✓'}
@@ -321,7 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `).join('');
         
-        // Исправленные обработчики событий
         attachTaskEventHandlers();
     }
 
@@ -329,11 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Обработчики для кнопок выполнения задач
         const completeButtons = tasksList.querySelectorAll('.task-complete-btn');
         completeButtons.forEach(button => {
-            // Удаляем старые обработчики
             button.replaceWith(button.cloneNode(true));
         });
 
-        // Добавляем новые обработчики
         const newCompleteButtons = tasksList.querySelectorAll('.task-complete-btn');
         newCompleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -351,11 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Обработчики для кнопок удаления задач
         const deleteButtons = tasksList.querySelectorAll('.task-delete-btn');
         deleteButtons.forEach(button => {
-            // Удаляем старые обработчики
             button.replaceWith(button.cloneNode(true));
         });
 
-        // Добавляем новые обработчики
         const newDeleteButtons = tasksList.querySelectorAll('.task-delete-btn');
         newDeleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -397,7 +536,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log('📝 Новый статус задачи:', tasks[taskIndex].completed);
             
-            await saveTasks();
+            await saveTasks(); // Это автоматически синхронизирует с индивидуальной программой
+            
             updateCalendar();
             updateTasksDisplay();
             
@@ -417,22 +557,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (taskIndex !== -1) {
             const taskText = tasks[taskIndex].text;
+            const isStudyTask = tasks[taskIndex].tag === 'study';
             console.log('📝 Удаляемая задача:', taskText);
             
             tasks = tasks.filter(task => task.id !== taskId);
             console.log('✅ Задача удалена из массива, осталось задач:', tasks.length);
             
-            await saveTasks();
+            await saveTasks(); // Это автоматически синхронизирует с индивидуальной программой
+            
             updateCalendar();
             updateTasksDisplay();
             
-            showMessage(`Задача "${taskText}" удалена`, 'info');
+            if (isStudyTask) {
+                showMessage(`Учебная задача "${taskText}" удалена из планнера и индивидуальной программы`, 'info');
+            } else {
+                showMessage(`Задача "${taskText}" удалена`, 'info');
+            }
         } else {
             console.error('❌ Задача не найдена для удаления');
             showMessage('Ошибка: задача не найдена', 'error');
         }
     }
-
     function showMessage(message, type = 'info') {
         const existingNotifications = document.querySelectorAll('.notification-message');
         existingNotifications.forEach(notification => notification.remove());
@@ -559,6 +704,210 @@ document.addEventListener('DOMContentLoaded', () => {
         .task-delete-btn:hover {
             background: #ef4444;
             color: white;
+        }
+        
+        /* Стили для учебных задач */
+        .task-item--study {
+            border-left: 4px solid #6366f1;
+            background: color-mix(in srgb, #6366f1 5%, transparent);
+        }
+        
+        .task-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .study-badge {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        /* Стили для модального окна выбора тега */
+        .tag-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .tag-modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 0;
+            width: 450px;
+            max-width: 90vw;
+            box-shadow: 0 25px 50px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        .tag-modal-header {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .tag-modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.3em;
+        }
+        
+        .tag-modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .tag-modal-close:hover {
+            color: var(--text-primary);
+            background: var(--hover-bg);
+        }
+        
+        .tag-modal-body {
+            padding: 25px;
+        }
+        
+        .tag-modal-body p {
+            margin: 0 0 20px 0;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            padding: 10px;
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .tag-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .tag-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--card-bg);
+        }
+        
+        .tag-option:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .tag-option input[type="radio"] {
+            margin-right: 12px;
+        }
+        
+        .tag-option-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .tag-option-icon {
+            font-size: 1.5em;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .tag-option-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tag-option-text strong {
+            color: var(--text-primary);
+            font-size: 1em;
+            margin-bottom: 4px;
+        }
+        
+        .tag-option-text small {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+        
+        .tag-option input[type="radio"]:checked + .tag-option-content {
+            color: var(--accent-color);
+        }
+        
+        .tag-option input[type="radio"]:checked ~ .tag-option-content .tag-option-text strong {
+            color: var(--accent-color);
+        }
+        
+        .tag-modal-actions {
+            padding: 20px 25px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border-color);
+            background: var(--secondary-bg);
+            border-radius: 0 0 16px 16px;
+        }
+        
+        .tag-btn-cancel, .tag-btn-confirm {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .tag-btn-cancel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        .tag-btn-cancel:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        
+        .tag-btn-confirm {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .tag-btn-confirm:hover {
+            background: color-mix(in srgb, var(--accent-color) 80%, black);
+            transform: translateY(-1px);
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
     `;
     document.head.appendChild(style);
