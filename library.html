@@ -19,6 +19,15 @@
     </div>
     <nav>
       <ul class="sidebar-menu">
+        <!-- ДОБАВЬТЕ ЭТОТ ЭЛЕМЕНТ ДЛЯ КНОПКИ PIN В КОМПАКТНОМ РЕЖИМЕ -->
+        <li class="pin-item">
+          <div class="sidebar-pin">
+            <button id="pinToggle" class="pin-button">📌</button>
+          </div>
+        </li>
+        <li class="menu-divider-container">
+          <hr class="menu-divider">
+        </li>
         <li><a href="main_menu.html">
           <img src="images/home.svg" alt="Главная" class="menu-icon">
           <span>Главное меню</span>
@@ -145,5 +154,6 @@
 
   <script src="js/library.js"></script>
   <script src="js/theme-loader.js"></script>
+  <script src="js/sidebar-toggle.js"></script>
 </body>
 </html>

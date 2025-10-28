@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NoteGrab</title>
+    <title>NoteGrab - Учебные материалы</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -66,11 +66,78 @@
     <main class="main-content main-content-pinned">
         <div class="welcome-section">
             <h1>Учебные материалы</h1>
-            <p class="subtitle">Здесь будут ваши учебные файлы.</p>
+            <p class="subtitle">Соберите все полезные ресурсы в одном месте</p>
         </div>
-    
+
+        <!-- Поиск и фильтры -->
+        <div class="study-controls">
+            <div class="search-box">
+                <input type="text" id="studySearch" placeholder="Поиск по материалам...">
+            </div>
+            <div class="control-buttons">
+                <button class="add-material-button" id="addMaterialBtn">
+                    <span class="btn-icon">+</span>
+                    Добавить материал
+                </button>
+            </div>
+        </div>
+
+        <!-- Сетка категорий -->
+        <div class="categories-grid" id="categoriesGrid">
+            <!-- Категории будут добавляться через JavaScript -->
+        </div>
+
+        <!-- Модальное окно добавления материала -->
+        <div class="study-modal-backdrop" id="studyModalBackdrop" style="display: none;">
+            <div class="study-modal">
+                <div class="study-modal-header">
+                    <h3>Добавить учебный материал</h3>
+                    <button class="study-modal-close" id="studyModalClose">×</button>
+                </div>
+                <div class="study-modal-body">
+                    <form class="study-form" id="studyForm">
+                        <div class="study-form-group">
+                            <label for="materialTitle">Название ресурса</label>
+                            <input type="text" id="materialTitle" class="study-form-input" required 
+                                   placeholder="Например: Курс по машинному обучению">
+                        </div>
+                        <div class="study-form-group">
+                            <label for="materialUrl">URL ссылка</label>
+                            <input type="url" id="materialUrl" class="study-form-input" required 
+                                   placeholder="https://example.com">
+                        </div>
+                        <div class="study-form-group">
+                            <label for="materialCategory">Категория</label>
+                            <select id="materialCategory" class="study-form-input" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="math">Математика</option>
+                                <option value="programming">Программирование</option>
+                                <option value="ai">Искусственный интеллект</option>
+                            </select>
+                        </div>
+                        <div class="study-form-group">
+                            <label for="materialDescription">Описание</label>
+                            <textarea id="materialDescription" class="study-form-textarea" 
+                                     placeholder="Краткое описание ресурса..."></textarea>
+                        </div>
+                        <div class="study-form-group">
+                            <label for="materialTags">Теги (через запятую)</label>
+                            <input type="text" id="materialTags" class="study-form-input" 
+                                   placeholder="курс, видео, практика">
+                        </div>
+                        <div class="study-form-actions">
+                            <button type="button" class="study-btn-cancel" id="studyCancelBtn">Отмена</button>
+                            <button type="submit" class="study-btn-save">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="system-messages" style="display: none;"></div>
     </main>
 
+    <script src="js/study-materials.js"></script>
     <script src="js/theme-loader.js"></script>
+    <script src="js/sidebar-toggle.js"></script>
 </body>
 </html>

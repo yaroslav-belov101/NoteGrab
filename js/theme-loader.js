@@ -1,122 +1,134 @@
-// theme-loader.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Функция применения темы и настроек
-    function applyThemeAndSettings() {
-        const savedSettings = localStorage.getItem('globalAppSettings');
-        if (savedSettings) {
-            try {
-                const settings = JSON.parse(savedSettings);
-                
-                // Применяем тему к body
-                document.body.className = `theme-${settings.theme}`;
-                
-                // Применяем акцентный цвет
-                if (settings.accentColor) {
-                    document.documentElement.style.setProperty('--accent-color', settings.accentColor);
-                }
-                
-                // Применяем настройку компактного сайдбара
-                applyCompactSidebar(settings.compactSidebar);
-                
-                console.log('Настройки применены:', settings.theme, 'Compact sidebar:', settings.compactSidebar);
-            } catch (e) {
-                console.error('Ошибка применения настроек:', e);
-                applyDefaultSettings();
-            }
+// Загрузчик тем для приложения NoteGrab
+class ThemeLoader {
+    constructor() {
+        this.availableThemes = ['theme-dark', 'theme-light', 'theme-blue'];
+        this.init();
+    }
+
+    init() {
+        this.loadSavedTheme();
+        this.setupThemeSwitcher();
+        this.setupThemePreviews();
+    }
+
+    // Загрузка сохраненной темы
+    loadSavedTheme() {
+        const savedTheme = localStorage.getItem('selectedTheme');
+        
+        if (savedTheme && this.availableThemes.includes(savedTheme)) {
+            this.applyTheme(savedTheme);
         } else {
-            applyDefaultSettings();
+            // По умолчанию используем темную тему
+            this.applyTheme('theme-dark');
+            localStorage.setItem('selectedTheme', 'theme-dark');
         }
     }
-    
-    // Функция применения компактного сайдбара
-    function applyCompactSidebar(compactSidebar) {
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-        const pinButton = document.getElementById('pinToggle');
+
+    // Применение темы
+    applyTheme(themeName) {
+        // Удаляем все классы тем
+        document.body.className = document.body.className.replace(/\btheme-\w+/g, '');
         
-        if (!sidebar || !mainContent) return;
+        // Добавляем новую тему
+        document.body.classList.add(themeName);
         
-        if (compactSidebar) {
-            // Активируем компактный режим
-            sidebar.classList.remove('sidebar-pinned');
-            sidebar.classList.add('sidebar-unpinned');
-            mainContent.classList.remove('main-content-pinned');
-            mainContent.classList.add('main-content-unpinned');
-            
-            // Обновляем состояние кнопки pin
-            if (pinButton) {
-                pinButton.classList.remove('pinned');
-            }
-        } else {
-            // Активируем обычный режим
-            sidebar.classList.remove('sidebar-unpinned');
-            sidebar.classList.add('sidebar-pinned');
-            mainContent.classList.remove('main-content-unpinned');
-            mainContent.classList.add('main-content-pinned');
-            
-            // Обновляем состояние кнопки pin
-            if (pinButton) {
-                pinButton.classList.add('pinned');
-            }
-        }
+        // Сохраняем выбор
+        localStorage.setItem('selectedTheme', themeName);
+        
+        // Обновляем активный элемент в настройках
+        this.updateActiveThemeIndicator(themeName);
+        
+        console.log(`Тема применена: ${themeName}`);
     }
-    
-    // Функция применения настроек по умолчанию
-    function applyDefaultSettings() {
-        document.body.className = 'theme-dark';
-        applyCompactSidebar(false);
-    }
-    
-    // Инициализация управления сайдбаром
-    function initSidebar() {
-        const pinButton = document.getElementById('pinToggle');
-        if (pinButton) {
-            pinButton.addEventListener('click', function() {
-                const sidebar = document.querySelector('.sidebar');
-                const mainContent = document.querySelector('.main-content');
-                
-                if (sidebar.classList.contains('sidebar-pinned')) {
-                    // Переключаем в компактный режим
-                    sidebar.classList.remove('sidebar-pinned');
-                    sidebar.classList.add('sidebar-unpinned');
-                    mainContent.classList.remove('main-content-pinned');
-                    mainContent.classList.add('main-content-unpinned');
-                    pinButton.classList.remove('pinned');
-                    
-                    // Сохраняем настройку
-                    updateCompactSidebarSetting(true);
-                } else {
-                    // Переключаем в обычный режим
-                    sidebar.classList.remove('sidebar-unpinned');
-                    sidebar.classList.add('sidebar-pinned');
-                    mainContent.classList.remove('main-content-unpinned');
-                    mainContent.classList.add('main-content-pinned');
-                    pinButton.classList.add('pinned');
-                    
-                    // Сохраняем настройку
-                    updateCompactSidebarSetting(false);
+
+    // Настройка переключателя тем
+    setupThemeSwitcher() {
+        const themeOptions = document.querySelectorAll('.theme-option');
+        
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const themeName = option.getAttribute('data-theme');
+                if (themeName && this.availableThemes.includes(themeName)) {
+                    this.applyTheme(themeName);
                 }
             });
-        }
+        });
     }
-    
-    // Функция обновления настройки компактного сайдбара
-    function updateCompactSidebarSetting(compactSidebar) {
-        const savedSettings = localStorage.getItem('globalAppSettings');
-        let settings = savedSettings ? JSON.parse(savedSettings) : {};
+
+    // Обновление индикатора активной темы
+    updateActiveThemeIndicator(activeTheme) {
+        const themeOptions = document.querySelectorAll('.theme-option');
         
-        settings.compactSidebar = compactSidebar;
-        localStorage.setItem('globalAppSettings', JSON.stringify(settings));
+        themeOptions.forEach(option => {
+            const themeName = option.getAttribute('data-theme');
+            if (themeName === activeTheme) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
     }
-    
-    // Применяем настройки при загрузке
-    applyThemeAndSettings();
-    initSidebar();
-    
-    // Слушаем изменения в localStorage
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'globalAppSettings') {
-            applyThemeAndSettings();
+
+    // Настройка превью тем (если используется в настройках)
+    setupThemePreviews() {
+        // Эта функция может использоваться для динамического обновления превью тем
+        // если они генерируются через JavaScript
+    }
+
+    // Получение текущей темы
+    getCurrentTheme() {
+        return localStorage.getItem('selectedTheme') || 'theme-dark';
+    }
+
+    // Проверка поддержки темной темы системы
+    setupSystemThemeDetection() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Система использует темную тему
+            if (!localStorage.getItem('selectedTheme')) {
+                this.applyTheme('theme-dark');
+            }
         }
-    });
+
+        // Слушаем изменения системной темы
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('selectedTheme')) {
+                // Если пользователь не выбирал тему вручную, следуем системной
+                this.applyTheme(e.matches ? 'theme-dark' : 'theme-light');
+            }
+        });
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    const themeLoader = new ThemeLoader();
+    
+    // Экспортируем для использования в других модулях
+    window.themeLoader = themeLoader;
 });
+
+// Функция для быстрого переключения темы (можно вызывать из консоли)
+function switchTheme(themeName) {
+    const themeLoader = window.themeLoader || new ThemeLoader();
+    themeLoader.applyTheme(themeName);
+}
+
+// Автоматическое определение системной темы при первом запуске
+function initializeSystemTheme() {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    
+    // Если тема еще не выбрана, определяем системную
+    if (!savedTheme && window.matchMedia) {
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const themeLoader = new ThemeLoader();
+        themeLoader.applyTheme(isDarkMode ? 'theme-dark' : 'theme-light');
+    }
+}
+
+// Инициализация при полной загрузке страницы
+window.addEventListener('load', initializeSystemTheme);
+
+// Экспорт для использования в Electron или других модулях
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { ThemeLoader, switchTheme, initializeSystemTheme };
+}

@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "error": "File not found",
+  "math": [
+    {
+      "id": "1761641950725",
+      "title": "Школково",
+      "url": "https://3.shkolkovo.online/catalog?SubjectId=1",
+      "category": "math",
+      "description": "Практика заданий ЕГЭ",
+      "tags": [
+        "практика"
+      ],
+      "createdAt": "2025-10-28T08:59:10.725Z",
+      "updatedAt": "2025-10-28T08:59:10.726Z"
+    }
+  ]
+}
