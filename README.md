@@ -106,8 +106,7 @@ npm run dist
 
 ## 👨‍💻 Автор
 
-*Ваше Имя/Название команды*
-* [Ваш GitHub](https://github.com/yaroslav-belov101)
+Yaroslav Belov
 
 ---
 

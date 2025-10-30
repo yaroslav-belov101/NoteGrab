@@ -8,7 +8,8 @@
     "dev": "electron . --enable-logging"
   },
   "devDependencies": {
-    "electron": "^22.0.0"
+    "electron": "^22.0.0",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "@lingo-reader/epub-parser": "^0.4.2",
